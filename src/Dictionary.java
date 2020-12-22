@@ -9,17 +9,22 @@ public class Dictionary {
 
     private ArrayList<Card> allWordsList;
     private ArrayList<Card> studyingWordsList;
-    private String fileName;
-    private int countToKnow = 1;
+
+    private int countToKnow = Integer.parseInt(MainClass.mainClass.getSettings().get(2));
+   // private int countToKnow = 15;
 
     public Dictionary() {
-        this.fileName = "H:\\WordsLearning\\words.txt";
+
         this.allWordsList = readWordsFromFile();
         if(allWordsList.size() > 10) {
+
             studyingWordsList = getStudyingListFromAllWordsList();
+
         }
 
     }
+
+
 
     public int getCountToKnow() {
         return countToKnow;
@@ -42,7 +47,7 @@ public class Dictionary {
         String temp;
         Card tempCard;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(MainClass.mainClass.getFileName()))) {
             while (reader.ready()) {
                 temp = reader.readLine().toLowerCase();
                 String[] wordInfo = temp.split("-");
@@ -63,7 +68,7 @@ public class Dictionary {
      * Перезаписываем allWordsList в ФАЙЛ
      */
     public void saveDictionaryToFile() {
-        try (BufferedWriter writerToFile = new BufferedWriter(new FileWriter(fileName, false))) {
+        try (BufferedWriter writerToFile = new BufferedWriter(new FileWriter(MainClass.mainClass.getFileName(),false))) {
 
             for (Card x : allWordsList) {
                 writerToFile.write(x.getEnglishWord() + "-" + x.getRussianWord() + "-" + x.getCount() + "-" + x.getIsLearning() + "\r");
@@ -83,7 +88,7 @@ public class Dictionary {
      *
      */
     public void resetAllProgress(){
-        try (BufferedWriter writerToFile = new BufferedWriter(new FileWriter(fileName, false))) {
+        try (BufferedWriter writerToFile = new BufferedWriter(new FileWriter(MainClass.mainClass.getFileName(), false))) {
 
             for (Card x : allWordsList) {
                 writerToFile.write(x.getEnglishWord() + "-" + x.getRussianWord() + "-0-no\r");
@@ -119,23 +124,12 @@ public class Dictionary {
      */
     public void addNewWord(String a, String b) {
 
-        try (BufferedWriter writerToFile = new BufferedWriter(new FileWriter(fileName, true))) {
+        try (BufferedWriter writerToFile = new BufferedWriter(new FileWriter(MainClass.mainClass.getFileName(), true))) {
 
             if (!allWordsList.contains(new Card(a, b, 0, "no")) && !a.equals("") && !b.equals("")) {
                 writerToFile.write(a + "-" + b + "-0-no\r");
                 writerToFile.flush();
-                this.allWordsList = readWordsFromFile();
-
-                SwingSawingMode.swingSawingWords.dictionaryCount.setText(String.format("The dictionary has : %s " +
-                                "words.",
-                        MainClass.mainClass.dictionary.getAllWordsList().size()));
-                SwingSawingMode.swingSawingWords.systemMessage.setText(String.format("   New word: \"%s - %s\" was " +
-                                "added. "
-                        , a,
-                        b));
-            } else {
-                SwingSawingMode.swingSawingWords.systemMessage.setText(" This word has already exist or incorrect " +
-                        "input.");
+                allWordsList = readWordsFromFile();
             }
 
         } catch (Exception e) {
@@ -157,7 +151,7 @@ public class Dictionary {
 
 
     /**
-     * Получаем 10 случайных карточек в которые включена карточка с изучаемым словом
+     * Получаем 10 случайных карточек в которые включена карточка с изучаемым словом для КНОПОК.
      */
     public ArrayList<Card> getRandomList(Card learningWordCard) {
 
@@ -182,38 +176,16 @@ public class Dictionary {
     }
 
 
-    /**
-     * Создаём список изучаемых слов
-     *
-     * @return
-     */
-  /*  public ArrayList<Card> getRandomListForLearn() {
-        ArrayList<Card> list = new ArrayList<>();
-
-        int i = 0;
-
-        Card card;
-        while (list.size() < 10) {
-            card = getRandomWordFromAllWordList();
-
-            if (!list.contains(card)  && card.getCount() < 10) {
-                card.setIsLearning("yes");
-                list.add(card);
-                i++;
-            }
-        }
-        return list;
-    }*/
-
 
     /**
      *
-     * Пытаемся получить список слов из словаря
+     * Пытаемся получить список изучаемых слов из словаря
      * Если ещё список слов не получен  и нет изучаемых слов
      * то добираем новые слова из файла
-     * @return
+     *
      */
     public ArrayList<Card> getStudyingListFromAllWordsList() {
+
         ArrayList<Card> list = new ArrayList<>();
         int i = 0;
 
