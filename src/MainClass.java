@@ -1,9 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.ArrayList;
 
 public class MainClass {
@@ -60,12 +57,15 @@ public class MainClass {
 
     private void loadSetting() {
         settings = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("settings.txt"))) {
+       // try (BufferedReader reader = new BufferedReader(new FileReader("settings.txt"))) {
 
-            while (reader.ready()) {
-                settings.add(reader.readLine());
+        try(FileInputStream fileInputStream = new FileInputStream("settings.txt");
+           InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream,"UTF-8");
+           BufferedReader bufferedReader = new BufferedReader(inputStreamReader)){
+
+            while (bufferedReader.ready()) {
+                settings.add(bufferedReader.readLine());
             }
-
 
             setFileName(settings.get(0));
 
@@ -75,7 +75,9 @@ public class MainClass {
 
         } catch (Exception e) {
             System.out.println("ERROR");
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter("settings.txt", false))) {
+            try (BufferedWriter writer =
+                         new BufferedWriter(new OutputStreamWriter(new FileOutputStream("settings.txt",false),
+                                 "UTF-8"))) {
                 writer.write("H:\\WordsLearning\\words.txt\r");
                 settings.add("H:\\WordsLearning\\words.txt");
                 writer.write("dark\n");
@@ -85,6 +87,7 @@ public class MainClass {
                 writer.flush();
                 ThemeDark = settings.get(1).equals("dark");
                 myColors = new MyColors(ThemeDark);
+                loadSetting();
 
             } catch (Exception r) {
 

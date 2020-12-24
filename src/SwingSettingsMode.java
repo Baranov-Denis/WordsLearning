@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -12,9 +14,11 @@ public class SwingSettingsMode {
     private final JFrame frame;
     private final JPanel panel;
     private final MyButton buttonReset, buttonBack, buttonSelectDictionary, buttonChangeCountWordRepeats;
-    private final JTextField fieldChangeCountWordRepeats;
+    private final JTextField fieldChangeCountWordRepeats/*, fieldCurrentDirectory*/;
     private final ButtonGroup buttonGroup;
     private final JRadioButton dark, light;
+
+    private JOptionPane jo;
 
     private ArrayList<String> tempSettings;
 
@@ -30,7 +34,12 @@ public class SwingSettingsMode {
 
         buttonReset = new MyButton("Reset learned progress");
         buttonReset.addActionListener(e -> {
-            MainClass.mainClass.dictionary.resetAllProgress();
+
+            int inp = JOptionPane.showConfirmDialog(panel, "All progress will be reset!!!");
+
+            if (inp == 0) {
+                MainClass.mainClass.dictionary.resetAllProgress();
+            }
         });
 
 
@@ -98,20 +107,22 @@ public class SwingSettingsMode {
         });
 
 
-        buttonSelectDictionary = new MyButton("Change Dictionary Path");
-        buttonSelectDictionary.addActionListener(e -> {
+        buttonSelectDictionary = new MyButton("Dictionary : " + MainClass.mainClass.getFileName());
+        buttonSelectDictionary.addActionListener(/*e -> {
             JFileChooser chooser = new JFileChooser();
-            int temp = chooser.showDialog(null, "Открыть файл");
+            chooser.setCurrentDirectory(new File("."));
+            int temp = chooser.showDialog(panel, "Открыть файл");
             if (temp == JFileChooser.APPROVE_OPTION) {
                 File file = chooser.getSelectedFile();
                 String fileName = file.getAbsolutePath();
-                tempSettings.set(0,fileName);
+                tempSettings.set(0, fileName);
                 saveSettings();
                 MainClass.mainClass.dictionary.getAllWordsList().clear();
                 MainClass.mainClass.setFileName(fileName);
                 MainClass.mainClass.dictionary = new Dictionary();
+                buttonSelectDictionary.setText("Dictionary : " + MainClass.mainClass.getFileName());
             }
-        });
+        }*/this::actionForChangeDirectory);
 
 
         panel.add(dark);
@@ -126,6 +137,23 @@ public class SwingSettingsMode {
         SwingUtilities.updateComponentTreeUI(frame);
     }
 
+
+    public void actionPerformed(ActionEvent e) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File("."));
+        int temp = chooser.showDialog(panel, "Открыть файл");
+        if (temp == JFileChooser.APPROVE_OPTION) {
+            File file = chooser.getSelectedFile();
+            String fileName = file.getAbsolutePath();
+            tempSettings.set(0, fileName);
+            saveSettings();
+            MainClass.mainClass.dictionary.getAllWordsList().clear();
+            MainClass.mainClass.setFileName(fileName);
+            MainClass.mainClass.dictionary = new Dictionary();
+            buttonSelectDictionary.setText("Dictionary : " + MainClass.mainClass.getFileName());
+        }
+    }
+
     private void changeTheme(String theme) {
         ArrayList<String> settings = MainClass.mainClass.getSettings();
         MainClass.mainClass.getSettings().set(1, theme);
@@ -136,6 +164,23 @@ public class SwingSettingsMode {
         } catch (Exception r) {
 
         }
+    }
+
+    public void actionForChangeDirectory(ActionEvent e){
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File("."));
+        int temp = chooser.showDialog(panel, "Открыть файл");
+        if (temp == JFileChooser.APPROVE_OPTION) {
+            File file = chooser.getSelectedFile();
+            String fileName = file.getAbsolutePath();
+            tempSettings.set(0, fileName);
+            saveSettings();
+            MainClass.mainClass.dictionary.getAllWordsList().clear();
+            MainClass.mainClass.setFileName(fileName);
+            MainClass.mainClass.dictionary = new Dictionary();
+            buttonSelectDictionary.setText("Dictionary : " + MainClass.mainClass.getFileName());
+        }
+
     }
 
     private void changeDictionary(String path) {

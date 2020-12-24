@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,19 +9,18 @@ public class Dictionary {
     private ArrayList<Card> studyingWordsList;
 
     private int countToKnow = Integer.parseInt(MainClass.mainClass.getSettings().get(2));
-   // private int countToKnow = 15;
+    // private int countToKnow = 15;
 
     public Dictionary() {
 
         this.allWordsList = readWordsFromFile();
-        if(allWordsList.size() > 10) {
+        if (allWordsList.size() > 10) {
 
             studyingWordsList = getStudyingListFromAllWordsList();
 
         }
 
     }
-
 
 
     public int getCountToKnow() {
@@ -37,17 +37,19 @@ public class Dictionary {
 
 
     /**
+     *
      * Считываем слова из файла и возвращаем упорядоченный по алфавиту(Англ слова) массив карточек
+     *
      */
     public ArrayList<Card> readWordsFromFile() {
         ArrayList<Card> resultList = new ArrayList<>();
         String temp;
         Card tempCard;
 
-       // try (BufferedReader reader = new BufferedReader(new FileReader(MainClass.mainClass.getFileName()))) {
-        try(BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(new FileInputStream(MainClass.mainClass.getFileName()),
-                            "UTF-8"))){
+        // try (BufferedReader reader = new BufferedReader(new FileReader(MainClass.mainClass.getFileName()))) {
+        try (BufferedReader reader =
+                     new BufferedReader(new InputStreamReader(new FileInputStream(MainClass.mainClass.getFileName()),
+                             "UTF-8"))) {
             while (reader.ready()) {
                 temp = reader.readLine().toLowerCase();
                 String[] wordInfo = temp.split("-");
@@ -58,9 +60,32 @@ public class Dictionary {
             e.printStackTrace();
         }
 
+        if(resultList.size() == 0){
+            createEmptyDictionary();
+
+        }
+
         Collections.sort(resultList);
 
         return resultList;
+    }
+
+
+    /****
+     *
+     * Create empty dictionary
+     *
+     */
+
+    private void createEmptyDictionary(){
+        try (BufferedWriter writer =
+                     new BufferedWriter(new OutputStreamWriter(new FileOutputStream("MyDictionary.dict",true),
+                             "UTF-8"))) {
+
+        } catch (Exception r) {
+
+        }
+        MainClass.mainClass.setFileName("MyDictionary.dict");
     }
 
 
@@ -68,11 +93,12 @@ public class Dictionary {
      * Перезаписываем allWordsList в ФАЙЛ
      */
     public void saveDictionaryToFile() {
-       // try (BufferedWriter writerToFile = new BufferedWriter(new FileWriter(MainClass.mainClass.getFileName(),
+        // try (BufferedWriter writerToFile = new BufferedWriter(new FileWriter(MainClass.mainClass.getFileName(),
         //        false))) {
-try(BufferedWriter writerToFile =
-            new BufferedWriter(new OutputStreamWriter(new FileOutputStream(MainClass.mainClass.getFileName(),false),
-                    "UTF-8"))){
+        try (BufferedWriter writerToFile =
+                     new BufferedWriter(new OutputStreamWriter(new FileOutputStream(MainClass.mainClass.getFileName()
+                             , true),
+                             "UTF-8"))) {
 
             for (Card x : allWordsList) {
                 writerToFile.write(x.getEnglishWord() + "-" + x.getRussianWord() + "-" + x.getCount() + "-" + x.getIsLearning() + "\r");
@@ -85,14 +111,15 @@ try(BufferedWriter writerToFile =
 
 
     /**
-     *
-     *
      * Сбрасывает изучаемые слова и прогресс изучения
      * Изменения пишутся в файл
-     *
      */
-    public void resetAllProgress(){
-        try (BufferedWriter writerToFile = new BufferedWriter(new FileWriter(MainClass.mainClass.getFileName(), false))) {
+    public void resetAllProgress() {
+        //  try (BufferedWriter writerToFile = new BufferedWriter(new FileWriter(MainClass.mainClass.getFileName(),
+        //        false))) {
+        try (BufferedWriter writerToFile =
+                     new BufferedWriter(new OutputStreamWriter(new FileOutputStream(MainClass.mainClass.getFileName(), false),
+                             "UTF-8"))) {
 
             for (Card x : allWordsList) {
                 writerToFile.write(x.getEnglishWord() + "-" + x.getRussianWord() + "-0-no\r");
@@ -106,20 +133,18 @@ try(BufferedWriter writerToFile =
 
     /**
      * Сброс прогресса карточки на 0 при ошибке
-     *
      */
-    public void resetOneWordProgress(Card card){
+    public void resetOneWordProgress(Card card) {
         card.setCount(-1);
     }
 
-    public void wordTestLearn(Card card){
+    public void wordTestLearn(Card card) {
 
-        if(card.getCount() > countToKnow) {
+        if (card.getCount() > countToKnow) {
             card.setIsLearning("no");
-           studyingWordsList = getStudyingListFromAllWordsList();
+            studyingWordsList = getStudyingListFromAllWordsList();
         }
     }
-
 
 
     /**
@@ -128,7 +153,12 @@ try(BufferedWriter writerToFile =
      */
     public void addNewWord(String a, String b) {
 
-        try (BufferedWriter writerToFile = new BufferedWriter(new FileWriter(MainClass.mainClass.getFileName(), true))) {
+        // try (BufferedWriter writerToFile = new BufferedWriter(new FileWriter(MainClass.mainClass.getFileName(),
+        //          true))) {
+        try (BufferedWriter writerToFile =
+                     new BufferedWriter(new OutputStreamWriter(new FileOutputStream(MainClass.mainClass.getFileName()
+                             , true),
+                             "UTF-8"))) {
 
             if (!allWordsList.contains(new Card(a, b, 0, "no")) && !a.equals("") && !b.equals("")) {
                 writerToFile.write(a + "-" + b + "-0-no\r");
@@ -180,13 +210,10 @@ try(BufferedWriter writerToFile =
     }
 
 
-
     /**
-     *
      * Пытаемся получить список изучаемых слов из словаря
      * Если ещё список слов не получен  и нет изучаемых слов
      * то добираем новые слова из файла
-     *
      */
     public ArrayList<Card> getStudyingListFromAllWordsList() {
 
@@ -204,19 +231,19 @@ try(BufferedWriter writerToFile =
             while (list.size() < 10) {
                 card = getRandomWordFromAllWordList();
 
-                if (!list.contains(card)  && card.getCount() < countToKnow) {
+                if (!list.contains(card) && card.getCount() < countToKnow) {
                     card.setIsLearning("yes");
                     list.add(card);
                 }
                 i++;
-                if(i > allWordsList.size()) break;
+                if (i > allWordsList.size()) break;
             }
         }
         return list;
     }
 
 
- //   public void
+    //   public void
 
 
 

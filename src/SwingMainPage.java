@@ -50,9 +50,13 @@ public class SwingMainPage extends JButton implements ActionListener {
         buttonSettings.addActionListener(this);
 
 
+
+
         panel.add(buttonForSaveNewWords);
         panel.add(buttonForLearnWords);
         panel.add(buttonSettings);
+
+
 
 
         SwingUtilities.updateComponentTreeUI(frame);
