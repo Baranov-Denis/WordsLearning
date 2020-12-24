@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -47,7 +44,10 @@ public class Dictionary {
         String temp;
         Card tempCard;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(MainClass.mainClass.getFileName()))) {
+       // try (BufferedReader reader = new BufferedReader(new FileReader(MainClass.mainClass.getFileName()))) {
+        try(BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(new FileInputStream(MainClass.mainClass.getFileName()),
+                            "UTF-8"))){
             while (reader.ready()) {
                 temp = reader.readLine().toLowerCase();
                 String[] wordInfo = temp.split("-");
@@ -68,7 +68,11 @@ public class Dictionary {
      * Перезаписываем allWordsList в ФАЙЛ
      */
     public void saveDictionaryToFile() {
-        try (BufferedWriter writerToFile = new BufferedWriter(new FileWriter(MainClass.mainClass.getFileName(),false))) {
+       // try (BufferedWriter writerToFile = new BufferedWriter(new FileWriter(MainClass.mainClass.getFileName(),
+        //        false))) {
+try(BufferedWriter writerToFile =
+            new BufferedWriter(new OutputStreamWriter(new FileOutputStream(MainClass.mainClass.getFileName(),false),
+                    "UTF-8"))){
 
             for (Card x : allWordsList) {
                 writerToFile.write(x.getEnglishWord() + "-" + x.getRussianWord() + "-" + x.getCount() + "-" + x.getIsLearning() + "\r");
