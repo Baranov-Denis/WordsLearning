@@ -49,7 +49,6 @@ public class MainClass {
                 panel.setPreferredSize(new Dimension(340, 585));
                 frame.add(panel);
                 frame.setVisible(true);
-
                 new SwingMainPage();
             }
         });
@@ -57,11 +56,10 @@ public class MainClass {
 
     private void loadSetting() {
         settings = new ArrayList<>();
-       // try (BufferedReader reader = new BufferedReader(new FileReader("settings.txt"))) {
 
-        try(FileInputStream fileInputStream = new FileInputStream("settings.txt");
-           InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream,"UTF-8");
-           BufferedReader bufferedReader = new BufferedReader(inputStreamReader)){
+        try (FileInputStream fileInputStream = new FileInputStream("settings.txt");
+             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
+             BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
 
             while (bufferedReader.ready()) {
                 settings.add(bufferedReader.readLine());
@@ -76,10 +74,10 @@ public class MainClass {
         } catch (Exception e) {
             System.out.println("ERROR");
             try (BufferedWriter writer =
-                         new BufferedWriter(new OutputStreamWriter(new FileOutputStream("settings.txt",false),
+                         new BufferedWriter(new OutputStreamWriter(new FileOutputStream("settings.txt", false),
                                  "UTF-8"))) {
-                writer.write("H:\\WordsLearning\\words.txt\r");
-                settings.add("H:\\WordsLearning\\words.txt");
+                writer.write("MyDi.dict\r");
+                settings.add("MyDi.dict");
                 writer.write("dark\n");
                 settings.add("dark");
                 writer.write("15\n");
@@ -94,13 +92,6 @@ public class MainClass {
             }
         }
 
-
-
-
-
-
-       /* JFileChooser chooser = new JFileChooser();
-        int temp = chooser.showDialog(null, "Открыть файл");*/
 
     }
 
