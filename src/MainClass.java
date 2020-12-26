@@ -15,7 +15,6 @@ public class MainClass {
     private String fileName;
 
     public static void main(String[] args) {
-
         mainClass = new MainClass();
         mainClass.loadSetting();
         mainClass.run();

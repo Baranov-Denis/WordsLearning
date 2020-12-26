@@ -85,7 +85,7 @@ public class SwingSettingsMode {
             SwingUtilities.updateComponentTreeUI(frame);
         });
 
-        buttonChangeCountWordRepeats = new MyButton("How repeat ");
+        buttonChangeCountWordRepeats = new MyButton("Press for save word repeat ");
         buttonChangeCountWordRepeats.setPreferredSize(new Dimension(233, 41));
         fieldChangeCountWordRepeats = new JTextField(3);
         fieldChangeCountWordRepeats.setFont(new Font("sans-serif", Font.BOLD, 28));

@@ -7,24 +7,15 @@ public class MyButton extends JButton {
     private Color hoverBackgroundColor = MyColors.BUTTON_HOVER;
     private Color pressedBackgroundColor = MyColors.BUTTON_PRESSED;
 
-
-    public MyButton() {
-        this(null);
-        this.setPreferredSize(new Dimension(320, 41));
-    }
-
-
     public MyButton(String text) {
-
         super(text);
-
-            super.setContentAreaFilled(false);
-            this.setPreferredSize(new Dimension(320, 41));
-            this.setBorder(new BevelBorder(5));
-            this.setBackground(MyColors.BUTTON_COLOR);
-            this.setForeground(MyColors.FONT);
-            this.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
+        super.setContentAreaFilled(false);
+        this.setPreferredSize(new Dimension(320, 41));
+        this.setBorder(new BevelBorder(BevelBorder.RAISED));
+        this.setBackground(MyColors.BUTTON_COLOR);
+        this.setForeground(MyColors.FONT);
+        this.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        this.setFocusPainted(false);
     }
 
     @Override

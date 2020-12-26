@@ -4,9 +4,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class SwingSawingMode implements ActionListener {
+public class SwingSavingMode implements ActionListener {
 
-    public static SwingSawingMode swingSawingWords;
+    public static SwingSavingMode swingSawingWords;
     private final MyButton saveButton;
     private final MyButton backButton;
     JLabel systemMessage;
@@ -20,7 +20,7 @@ public class SwingSawingMode implements ActionListener {
     private JLabel empty;
 
 
-    public SwingSawingMode() {
+    public SwingSavingMode() {
 
         swingSawingWords = this;
         frame = MainClass.mainClass.frame;
@@ -43,11 +43,15 @@ public class SwingSawingMode implements ActionListener {
 
         textFieldForEnglishWord = new JTextField(9);
         textFieldForEnglishWord.setFont(new Font("sans-serif", Font.PLAIN, 20));
+        textFieldForEnglishWord.setBorder(new BevelBorder(1));
+        textFieldForEnglishWord.setCaretColor(MyColors.FONT);
         textFieldForEnglishWord.setBackground(MyColors.BUTTON_COLOR);
         textFieldForEnglishWord.setForeground(MyColors.FONT);
 
         textFieldForRussianWord = new JTextField(9);
         textFieldForRussianWord.setFont(new Font("sans-serif", Font.PLAIN, 20));
+        textFieldForRussianWord.setBorder(new BevelBorder(1));
+        textFieldForRussianWord.setCaretColor(MyColors.FONT);
         textFieldForRussianWord.setBackground(MyColors.BUTTON_COLOR);
         textFieldForRussianWord.setForeground(MyColors.FONT);
 
@@ -100,9 +104,8 @@ public class SwingSawingMode implements ActionListener {
 
 
     /**
-     *
-     *
      * Метод возвращает системное сообщение об успешном сохранении или ошибке
+     *
      * @param eng английское слово
      * @param rus русское слово
      * @return

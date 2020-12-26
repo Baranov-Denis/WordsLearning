@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,10 +13,6 @@ public class SwingMainPage extends JButton implements ActionListener {
     MyButton buttonSettings;
     JPanel panel;
 
-  //  Color buttonColor = new Color(50,50,50);
-  //  Color buttonFontColor = new Color(250,250,250);
-   // Color redColor = new Color(255,50,10);
-
     Font buttonFont = new Font("sans-serif", Font.BOLD, 30);
 
 
@@ -26,12 +21,9 @@ public class SwingMainPage extends JButton implements ActionListener {
         swingMainPage = this;
 
         frame = MainClass.mainClass.frame;
-
         panel = MainClass.mainClass.panel;
         panel.removeAll();
         panel.setBackground(MyColors.BACKGROUND);
-
-
 
         buttonForSaveNewWords = new MyButton("Add new words");
         buttonForSaveNewWords.setPreferredSize(new Dimension(320, 187));
@@ -49,18 +41,11 @@ public class SwingMainPage extends JButton implements ActionListener {
         buttonSettings.setFont(buttonFont);
         buttonSettings.addActionListener(this);
 
-
-
-
         panel.add(buttonForSaveNewWords);
         panel.add(buttonForLearnWords);
         panel.add(buttonSettings);
 
-
-
-
         SwingUtilities.updateComponentTreeUI(frame);
-
     }
 
 
@@ -73,7 +58,7 @@ public class SwingMainPage extends JButton implements ActionListener {
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            new SwingSawingMode();
+                            new SwingSavingMode();
                         }
                     });
 

@@ -25,18 +25,22 @@ public class SwingLearningMode implements ActionListener {
 
     MyButton backButton;
 
-    //   private int buttonHeight = 41;
+
 
 
     int random;
 
     public SwingLearningMode() {
-        //   buttons = new ArrayList<>();
 
+        MainClass.mainClass.dictionary = new Dictionary();
         swingLearningMode = this;
+
         frame = SwingMainPage.swingMainPage.frame;
         panel = SwingMainPage.swingMainPage.panel;
         panel.removeAll();
+
+
+
 
 
         backButton = new MyButton("<---Back");
@@ -50,7 +54,6 @@ public class SwingLearningMode implements ActionListener {
         buttonPanel = new JPanel();
         buttonPanel.setPreferredSize(new Dimension(340, 467));
         buttonPanel.setBackground(MyColors.BACKGROUND);
-        // buttonPanel.setBackground(Color.GRAY);
 
         frame.setLayout(new FlowLayout());
 
@@ -64,8 +67,8 @@ public class SwingLearningMode implements ActionListener {
             learningWordCard = MainClass.mainClass.dictionary.getRandomWordFromStudyingWordsList();
             if(learningWordCard!=null) {
                 wordForLearnLabel.setText(learningWordCard.getEnglishWord());
-                System.out.println("jhk;lj");
             }else return;
+
 
 
         panel.add(wordForLearnLabel);
@@ -83,26 +86,19 @@ public class SwingLearningMode implements ActionListener {
 
         createButtons();
 
-
         SwingUtilities.updateComponentTreeUI(frame);
     }
 
 
     private void createButtons() {
         buttonPanel.removeAll();
-        // buttonPanel.setBackground(Color.GRAY);
+
         for (int i = 0; i < 10; i++) {
             button = new MyButton(randomCards.get(i).getRussianWord());
-            //   button.setPreferredSize(new Dimension(320, buttonHeight));
             button.addActionListener(this);
-            button.setBorder(new BevelBorder(5));
-            // button.setBackground(SwingMainPage.swingMainPage.buttonColor);
-            // button.setForeground(SwingMainPage.swingMainPage.buttonFontColor);
             if (learningWordCard.getCount() == 0 && button.getText().equals(learningWordCard.getRussianWord())) {
                 button.setForeground(MyColors.MY_GREEN);
             }
-            //  buttons.add(button);
-            button.setCursor(new Cursor(Cursor.HAND_CURSOR));
             button.setFont(new Font("sans-serif", Font.BOLD, 25));
             buttonPanel.add(button);
             SwingUtilities.updateComponentTreeUI(frame);
@@ -118,21 +114,15 @@ public class SwingLearningMode implements ActionListener {
     private void updateButtons() {
 
         buttonPanel.removeAll();
-        //  buttonPanel.setBackground(SwingMainPage.swingMainPage.redColor);
+
         for (int i = 0; i < 10; i++) {
             button = new MyButton(randomCards.get(i).getRussianWord());
-            //     button.setPreferredSize(new Dimension(320, buttonHeight));
             button.addActionListener(this);
-            // System.out.println(button.getText());
-            button.setBorder(new BevelBorder(5));
-            // button.setBackground(SwingMainPage.swingMainPage.buttonColor);
-            //   button.setForeground(SwingMainPage.swingMainPage.buttonFontColor);
             if (button.getText().equals(learningWordCard.getRussianWord())) {
                 button.setForeground(MyColors.MY_GREEN);
             } else {
                 button.setForeground(MyColors.MY_RED);
             }
-            button.setCursor(new Cursor(Cursor.HAND_CURSOR));
             button.setFont(new Font("sans-serif", Font.BOLD, 25));
             buttonPanel.add(button);
 
@@ -141,29 +131,27 @@ public class SwingLearningMode implements ActionListener {
     }
 
     public void nextWord() {
+        wordForLearnLabel.setText("");//Очищаем поле с изучаемым словом
+        panel.removeAll();//Удаляем кнопки
 
 
-        wordForLearnLabel.setText("");
-        panel.removeAll();
-
-        panel.setBackground(new Color(150, 150, 150));
-
-
-        learningWordCard = MainClass.mainClass.dictionary.getRandomWordFromStudyingWordsList();
-        randomCards = MainClass.mainClass.dictionary.getRandomList(learningWordCard);
-        wordForLearnLabel.setText(learningWordCard.getEnglishWord());
+        learningWordCard = MainClass.mainClass.dictionary.getRandomWordFromStudyingWordsList();//Получаем случайное
+        // слово из списка изучаемых слов
+        randomCards = MainClass.mainClass.dictionary.getRandomList(learningWordCard);//Получаем 10 случайных карточек
+        // в которые включена карточка с изучаемым словом для КНОПОК.
+        wordForLearnLabel.setText(learningWordCard.getEnglishWord());//Устанавливаем английское слово в поле
+        // изучаеиого слова
 
 
-        panel.add(wordForLearnLabel);
-        createButtons();
+        panel.add(wordForLearnLabel);//Добавляем на панель изучаеиое слово
+        createButtons();//Создаём кнопки ипомещаем их на buttonPanel
         panel.add(buttonPanel);
-        panel.add(backButton);
-        countLearn = new JLabel(String.format(" %s / %s", learningWordCard.getCount(), MainClass.mainClass.dictionary.getCountToKnow()), SwingConstants.CENTER);
+        panel.add(backButton);//Добавляем кноапку назад т.к. очищаем всю пнел removeAll
+        countLearn = new JLabel(String.format(" %s / %s", learningWordCard.getCount(),
+                MainClass.mainClass.dictionary.getCountToKnow()), SwingConstants.CENTER);// Подписываем количество
+        // попыток
         countLearn.setPreferredSize(new Dimension(200, 40));
-
         panel.add(countLearn);
-        random = (int) (Math.random() * 10);
-
 
     }
 
@@ -172,26 +160,17 @@ public class SwingLearningMode implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if (e.getActionCommand().equals(learningWordCard.getRussianWord())) {
-
             learningWordCard.setCount(learningWordCard.getCount() + 1);
             MainClass.mainClass.dictionary.wordTestLearn(learningWordCard);
             MainClass.mainClass.dictionary.saveDictionaryToFile();
             nextWord();
-
-
         } else {
-            // panel.setBackground(new Color(222, 25, 0));
             MainClass.mainClass.dictionary.resetOneWordProgress(learningWordCard);
-
             updateButtons();
-
-
         }
-
-
     }
 
-
+/*
     public void back(ActionEvent e) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -201,7 +180,7 @@ public class SwingLearningMode implements ActionListener {
             }
         });
 
-    }
+    }*/
 
 
 }
