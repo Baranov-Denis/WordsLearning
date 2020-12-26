@@ -19,6 +19,10 @@ public class Dictionary {
         studyingWordsList = getStudyingListFromAllWordsList(); //Получаем Список изучаемых слов в настоящее время
     }
 
+    public ArrayList<Card> getStudyingWordsList() {
+        return studyingWordsList;
+    }
+
     public int getCountToKnow() {
         return countToKnow;
     }
@@ -171,9 +175,14 @@ public class Dictionary {
             JOptionPane.showMessageDialog(SwingMainPage.swingMainPage.panel, "Dictionary doesn't exist. Create new " +
                     "Dictionary or change path to file.");
             return null;
-        } else {
+        } else if(studyingWordsList.size() == 0) {
+            new SwingMainPage();
+            JOptionPane.showMessageDialog(SwingMainPage.swingMainPage.panel, "All words were learned!");
+            return null;
+        } else  {
             return studyingWordsList.get((int) (Math.random() * studyingWordsList.size()));
         }
+
     }
 
 

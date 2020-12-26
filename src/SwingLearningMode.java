@@ -139,8 +139,10 @@ public class SwingLearningMode implements ActionListener {
         // слово из списка изучаемых слов
         randomCards = MainClass.mainClass.dictionary.getRandomList(learningWordCard);//Получаем 10 случайных карточек
         // в которые включена карточка с изучаемым словом для КНОПОК.
-        wordForLearnLabel.setText(learningWordCard.getEnglishWord());//Устанавливаем английское слово в поле
-        // изучаеиого слова
+        if(learningWordCard != null) {
+            wordForLearnLabel.setText(learningWordCard.getEnglishWord());//Устанавливаем английское слово в поле
+            // изучаеиого слова
+        }
 
 
         panel.add(wordForLearnLabel);//Добавляем на панель изучаеиое слово
@@ -163,7 +165,14 @@ public class SwingLearningMode implements ActionListener {
             learningWordCard.setCount(learningWordCard.getCount() + 1);
             MainClass.mainClass.dictionary.wordTestLearn(learningWordCard);
             MainClass.mainClass.dictionary.saveDictionaryToFile();
-            nextWord();
+            System.out.println(MainClass.mainClass.dictionary.getStudyingWordsList().size());
+            if(MainClass.mainClass.dictionary.getStudyingWordsList().size()!=0) {
+                nextWord();
+            }else{
+                new SwingMainPage();
+                JOptionPane.showMessageDialog(SwingMainPage.swingMainPage.panel, "All words were learned!");
+            }
+
         } else {
             MainClass.mainClass.dictionary.resetOneWordProgress(learningWordCard);
             updateButtons();

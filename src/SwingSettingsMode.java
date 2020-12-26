@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -89,6 +90,8 @@ public class SwingSettingsMode {
         buttonChangeCountWordRepeats.setPreferredSize(new Dimension(233, 41));
         fieldChangeCountWordRepeats = new JTextField(3);
         fieldChangeCountWordRepeats.setFont(new Font("sans-serif", Font.BOLD, 28));
+        fieldChangeCountWordRepeats.setBorder(new BevelBorder(1));
+        fieldChangeCountWordRepeats.setCaretColor(MyColors.FONT);
         fieldChangeCountWordRepeats.setForeground(MyColors.FONT);
         fieldChangeCountWordRepeats.setBackground(MyColors.BUTTON_COLOR);
         fieldChangeCountWordRepeats.setText("" + MainClass.mainClass.dictionary.getCountToKnow());
