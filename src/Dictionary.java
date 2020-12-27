@@ -105,6 +105,7 @@ public class Dictionary {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        allWordsList = readWordsFromFile();
     }
 
 
@@ -247,6 +248,16 @@ public class Dictionary {
             }
         }
         return list;
+    }
+
+    public int learnedWordsCounter(){
+        int count = 0;
+        for(Card x : allWordsList){
+            if(x.getCount() > countToKnow){
+                count++;
+            }
+        }
+        return count;
     }
 
 

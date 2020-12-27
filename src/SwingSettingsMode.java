@@ -2,7 +2,6 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -15,6 +14,7 @@ public class SwingSettingsMode {
     private final JFrame frame;
     private final JPanel panel;
     private final MyButton buttonReset, buttonBack, buttonSelectDictionary, buttonChangeCountWordRepeats;
+    private JLabel statistic;
     private final JTextField fieldChangeCountWordRepeats/*, fieldCurrentDirectory*/;
     private final ButtonGroup buttonGroup;
     private final JRadioButton dark, light;
@@ -40,8 +40,14 @@ public class SwingSettingsMode {
 
             if (inp == 0) {
                 MainClass.mainClass.dictionary.resetAllProgress();
+                statistic.setText(wordsCountUpdate());
             }
         });
+
+        statistic = new JLabel();
+        statistic.setText(wordsCountUpdate());
+        statistic.setPreferredSize(new Dimension(320, 41));
+        statistic.setBackground(MyColors.BUTTON_COLOR);
 
 
         buttonBack = new MyButton("<---Back");
@@ -133,11 +139,20 @@ public class SwingSettingsMode {
         panel.add(buttonChangeCountWordRepeats);
         panel.add(fieldChangeCountWordRepeats);
         panel.add(buttonSelectDictionary);
+        panel.add(statistic);
         panel.add(buttonReset);
         panel.add(buttonBack);
 
 
         SwingUtilities.updateComponentTreeUI(frame);
+    }
+
+    private String wordsCountUpdate() {
+        return String.format("<html><div style=\"text-align: center; margin : auto; width: 335\">Learned <font size =" +
+                        " 5> %s </font>" +
+                        "from <font size = 5> %s </font>words.</div></html>",
+                MainClass.mainClass.dictionary.learnedWordsCounter(),
+                MainClass.mainClass.dictionary.getAllWordsList().size()  ) ;
     }
 
 

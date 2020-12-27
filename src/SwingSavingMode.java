@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 
 public class SwingSavingMode implements ActionListener {
 
-    public static SwingSavingMode swingSawingWords;
+    public static SwingSavingMode swingSawingMode;
     private final MyButton saveButton;
     private final MyButton backButton;
     JLabel systemMessage;
@@ -22,7 +22,7 @@ public class SwingSavingMode implements ActionListener {
 
     public SwingSavingMode() {
 
-        swingSawingWords = this;
+        swingSawingMode = this;
         frame = MainClass.mainClass.frame;
         panel = SwingMainPage.swingMainPage.panel;
         panel.removeAll();
@@ -97,9 +97,9 @@ public class SwingSavingMode implements ActionListener {
 
     private String wordsCountUpdate() {
         return String.format("<html> <div style=\"text-align: center; margin : auto; width: 335\">The " +
-                        "dictionary has :<br><font size = 22> %s </font><br>" +
-                        "words.</div></html>",
-                MainClass.mainClass.dictionary.getAllWordsList().size());
+                        "dictionary has <br><font size = 22> %s </font><br>" +
+                        "words.<br><font size = 22> %s </font><br>of them were learned.</div></html>",
+                MainClass.mainClass.dictionary.getAllWordsList().size() , MainClass.mainClass.dictionary.learnedWordsCounter()) ;
     }
 
 
