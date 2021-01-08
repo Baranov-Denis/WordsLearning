@@ -6,6 +6,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class SwingSettingsMode {
 
@@ -19,7 +20,7 @@ public class SwingSettingsMode {
     private final ButtonGroup buttonGroup;
     private final JRadioButton dark, light;
 
-    private JOptionPane jo;
+
 
     private ArrayList<String> tempSettings;
 
@@ -116,24 +117,11 @@ public class SwingSettingsMode {
         });
 
 
+
+
+
         buttonSelectDictionary = new MyButton("Dictionary : " + MainClass.mainClass.getFileName());
-        buttonSelectDictionary.addActionListener(/*e -> {
-            JFileChooser chooser = new JFileChooser();
-            chooser.setCurrentDirectory(new File("."));
-            int temp = chooser.showDialog(panel, "Открыть файл");
-            if (temp == JFileChooser.APPROVE_OPTION) {
-                File file = chooser.getSelectedFile();
-                String fileName = file.getAbsolutePath();
-                tempSettings.set(0, fileName);
-                saveSettings();
-                MainClass.mainClass.dictionary.getAllWordsList().clear();
-                MainClass.mainClass.setFileName(fileName);
-                MainClass.mainClass.dictionary = new Dictionary();
-                buttonSelectDictionary.setText("Dictionary : " + MainClass.mainClass.getFileName());
-            }
-        }*/this::actionForChangeDirectory);
-
-
+        buttonSelectDictionary.addActionListener(this::actionForChangeDirectory);
         panel.add(dark);
         panel.add(light);
         panel.add(buttonChangeCountWordRepeats);
@@ -142,6 +130,9 @@ public class SwingSettingsMode {
         panel.add(statistic);
         panel.add(buttonReset);
         panel.add(buttonBack);
+
+
+
 
 
         SwingUtilities.updateComponentTreeUI(frame);
@@ -155,7 +146,7 @@ public class SwingSettingsMode {
                 MainClass.mainClass.dictionary.getAllWordsList().size()  ) ;
     }
 
-
+/*
     public void actionPerformed(ActionEvent e) {
         JFileChooser chooser = new JFileChooser();
         chooser.setCurrentDirectory(new File("."));
@@ -172,7 +163,7 @@ public class SwingSettingsMode {
         }
     }
 
-    private void changeTheme(String theme) {
+   private void changeTheme(String theme) {
         ArrayList<String> settings = MainClass.mainClass.getSettings();
         MainClass.mainClass.getSettings().set(1, theme);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("settings.txt", false))) {
@@ -182,7 +173,7 @@ public class SwingSettingsMode {
         } catch (Exception r) {
 
         }
-    }
+    }*/
 
     public void actionForChangeDirectory(ActionEvent e){
         JFileChooser chooser = new JFileChooser();
@@ -197,10 +188,11 @@ public class SwingSettingsMode {
             MainClass.mainClass.setFileName(fileName);
             MainClass.mainClass.dictionary = new Dictionary();
             buttonSelectDictionary.setText("Dictionary : " + MainClass.mainClass.getFileName());
+            statistic.setText(wordsCountUpdate());
         }
 
     }
-
+/*
     private void changeDictionary(String path) {
         ArrayList<String> settings = MainClass.mainClass.getSettings();
         MainClass.mainClass.getSettings().set(0, path);
@@ -212,7 +204,7 @@ public class SwingSettingsMode {
 
         }
     }
-
+*/
     private void saveSettings() {
 
 
