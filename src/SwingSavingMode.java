@@ -111,7 +111,11 @@ public class SwingSavingMode implements ActionListener {
      * @return
      */
     private String systemMessageUpdate(String eng, String rus) {
-        if (!eng.equals("") && !rus.equals("")) {
+        System.out.println(MainClass.mainClass.dictionary.containedThisWord(new Card(eng,
+                rus, 0 , "no")));
+        if (!eng.equals("") && !rus.equals("") && !MainClass.mainClass.dictionary.containedThisWord(new Card(eng,
+                rus, 0 , "no"))) {
+
             return String.format("<html> <div style=\"text-align:" +
                             " center; margin : auto; width: 335;color : rgb(0, 155, 0)\"> <font size = 9>  " +
                             "%s <br> %s </font><br>  was added. </div></html>"
@@ -143,11 +147,12 @@ public class SwingSavingMode implements ActionListener {
     private void addNewWord() {
         String eng = textFieldForEnglishWord.getText();
         String rus = textFieldForRussianWord.getText();
+        systemMessage.setText(systemMessageUpdate(eng, rus));
         MainClass.mainClass.dictionary.addNewWord(eng, rus);
         textFieldForEnglishWord.setText("");
         textFieldForRussianWord.setText("");
         dictionaryCount.setText(wordsCountUpdate());
-        systemMessage.setText(systemMessageUpdate(eng, rus));
+
     }
 
 

@@ -146,7 +146,7 @@ public class Dictionary {
                              , true),
                              "UTF-8"))) {
 
-            if (!allWordsList.contains(new Card(a, b, 0, "no")) && !a.equals("") && !b.equals("")) {
+            if (!containedThisWord(new Card(a, b, 0, "no")) && !a.equals("") && !b.equals("")) {
                 writerToFile.write(a + "-" + b + "-0-no\r");
                 writerToFile.flush();
                 allWordsList = readWordsFromFile();
@@ -155,6 +155,10 @@ public class Dictionary {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean containedThisWord(Card card){
+        return allWordsList.contains(card);
     }
 
 
