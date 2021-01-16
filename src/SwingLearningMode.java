@@ -17,8 +17,8 @@ public class SwingLearningMode implements ActionListener {
     JLabel wordForLearnLabel;
     JLabel countLearn;
 
-    Card learningWordCard;
-    ArrayList<Card> randomCards;
+    WordCard learningWordWordCard;
+    ArrayList<WordCard> randomWordCards;
     ArrayList<JButton> buttons;
 
     MyButton button;
@@ -64,9 +64,9 @@ public class SwingLearningMode implements ActionListener {
 
 
 
-            learningWordCard = MainClass.mainClass.dictionary.getRandomWordFromStudyingWordsList();
-            if(learningWordCard!=null) {
-                wordForLearnLabel.setText(learningWordCard.getEnglishWord());
+            learningWordWordCard = MainClass.mainClass.dictionary.getRandomWordFromStudyingWordsList();
+            if(learningWordWordCard !=null) {
+                wordForLearnLabel.setText(learningWordWordCard.getEnglishWord());
             }else return;
 
 
@@ -77,9 +77,9 @@ public class SwingLearningMode implements ActionListener {
 
 
 
-        randomCards = MainClass.mainClass.dictionary.getRandomList(learningWordCard);
+        randomWordCards = MainClass.mainClass.dictionary.getRandomList(learningWordWordCard);
 
-        countLearn = new JLabel(String.format(" %s / %s", learningWordCard.getCount(), MainClass.mainClass.dictionary.getCountToKnow()), SwingConstants.CENTER);
+        countLearn = new JLabel(String.format(" %s / %s", learningWordWordCard.getCount(), MainClass.mainClass.dictionary.getCountToKnow()), SwingConstants.CENTER);
         countLearn.setPreferredSize(new Dimension(200, 40));
 
         panel.add(countLearn);
@@ -94,9 +94,9 @@ public class SwingLearningMode implements ActionListener {
         buttonPanel.removeAll();
 
         for (int i = 0; i < 10; i++) {
-            button = new MyButton(randomCards.get(i).getRussianWord());
+            button = new MyButton(randomWordCards.get(i).getRussianWord());
             button.addActionListener(this);
-            if (learningWordCard.getCount() == 0 && button.getText().equals(learningWordCard.getRussianWord())) {
+            if (learningWordWordCard.getCount() == 0 && button.getText().equals(learningWordWordCard.getRussianWord())) {
                 button.setForeground(MyColors.MY_GREEN);
             }
             button.setFont(new Font("sans-serif", Font.BOLD, 25));
@@ -116,9 +116,9 @@ public class SwingLearningMode implements ActionListener {
         buttonPanel.removeAll();
 
         for (int i = 0; i < 10; i++) {
-            button = new MyButton(randomCards.get(i).getRussianWord());
+            button = new MyButton(randomWordCards.get(i).getRussianWord());
             button.addActionListener(this);
-            if (button.getText().equals(learningWordCard.getRussianWord())) {
+            if (button.getText().equals(learningWordWordCard.getRussianWord())) {
                 button.setForeground(MyColors.MY_GREEN);
             } else {
                 button.setForeground(MyColors.MY_RED);
@@ -135,12 +135,12 @@ public class SwingLearningMode implements ActionListener {
         panel.removeAll();//Удаляем кнопки
 
 
-        learningWordCard = MainClass.mainClass.dictionary.getRandomWordFromStudyingWordsList();//Получаем случайное
+        learningWordWordCard = MainClass.mainClass.dictionary.getRandomWordFromStudyingWordsList();//Получаем случайное
         // слово из списка изучаемых слов
-        randomCards = MainClass.mainClass.dictionary.getRandomList(learningWordCard);//Получаем 10 случайных карточек
+        randomWordCards = MainClass.mainClass.dictionary.getRandomList(learningWordWordCard);//Получаем 10 случайных карточек
         // в которые включена карточка с изучаемым словом для КНОПОК.
-        if(learningWordCard != null) {
-            wordForLearnLabel.setText(learningWordCard.getEnglishWord());//Устанавливаем английское слово в поле
+        if(learningWordWordCard != null) {
+            wordForLearnLabel.setText(learningWordWordCard.getEnglishWord());//Устанавливаем английское слово в поле
             // изучаеиого слова
         }
 
@@ -149,7 +149,7 @@ public class SwingLearningMode implements ActionListener {
         createButtons();//Создаём кнопки ипомещаем их на buttonPanel
         panel.add(buttonPanel);
         panel.add(backButton);//Добавляем кноапку назад т.к. очищаем всю пнел removeAll
-        countLearn = new JLabel(String.format(" %s / %s", learningWordCard.getCount(),
+        countLearn = new JLabel(String.format(" %s / %s", learningWordWordCard.getCount(),
                 MainClass.mainClass.dictionary.getCountToKnow()), SwingConstants.CENTER);// Подписываем количество
         // попыток
         countLearn.setPreferredSize(new Dimension(200, 40));
@@ -161,9 +161,9 @@ public class SwingLearningMode implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        if (e.getActionCommand().equals(learningWordCard.getRussianWord())) {
-            learningWordCard.setCount(learningWordCard.getCount() + 1);
-            MainClass.mainClass.dictionary.wordTestLearn(learningWordCard);
+        if (e.getActionCommand().equals(learningWordWordCard.getRussianWord())) {
+            learningWordWordCard.setCount(learningWordWordCard.getCount() + 1);
+            MainClass.mainClass.dictionary.wordTestLearn(learningWordWordCard);
             MainClass.mainClass.dictionary.saveDictionaryToFile();
             System.out.println(MainClass.mainClass.dictionary.getStudyingWordsList().size());
             if(MainClass.mainClass.dictionary.getStudyingWordsList().size()!=0) {
@@ -174,7 +174,7 @@ public class SwingLearningMode implements ActionListener {
             }
 
         } else {
-            MainClass.mainClass.dictionary.resetOneWordProgress(learningWordCard);
+            MainClass.mainClass.dictionary.resetOneWordProgress(learningWordWordCard);
             updateButtons();
         }
     }

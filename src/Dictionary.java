@@ -1,25 +1,17 @@
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Dictionary {
 
-    private ArrayList<Card> allWordsList; //Список всех слов из словаря
-    private ArrayList<Card> studyingWordsList;//Список изучаемых слов в настоящее время
+    private ArrayList<WordCard> allWordsList; //Список всех слов из словаря
+    private ArrayList<WordCard> studyingWordsList;//Список изучаемых слов в настоящее время
     private int learningWordsCount = 10; //Количество изучаемых слов в настоящее время TODO сделать чтение из файла
 
     private int countToKnow = Integer.parseInt(MainClass.mainClass.getSettings().get(2)); //Количество повторений
     // одного слова для изучения
 
-
-
-    public Dictionary() {
-        this.allWordsList = readWordsFromFile(); //Читаем словарь из файла
-        studyingWordsList = getStudyingListFromAllWordsList(); //Получаем Список изучаемых слов в настоящее время
-    }
-
-    public ArrayList<Card> getStudyingWordsList() {
+    public ArrayList<WordCard> getStudyingWordsList() {
         return studyingWordsList;
     }
 
@@ -31,19 +23,68 @@ public class Dictionary {
         this.countToKnow = countToKnow;
     }
 
-    public ArrayList<Card> getAllWordsList() {
+    public ArrayList<WordCard> getAllWordsList() {
         return allWordsList;
     }
 
+
+    public Dictionary() {
+        //this.allWordsList = readWordsFromFile(); //Читаем словарь из файла
+        this.allWordsList = readAllWordsFromFile(); //Читаем словарь из файла
+        studyingWordsList = getStudyingListFromAllWordsList(); //Получаем Список изучаемых слов в настоящее время
+    }
+
     /**
+     * New method for reading all words from File to ArrayList
      *
-     * Считываем слова из файла и возвращаем упорядоченный по алфавиту(Англ слова) массив карточек
-     *
+     * @return ArrayList<WordCard>
      */
-    public ArrayList<Card> readWordsFromFile() {
-        ArrayList<Card> resultList = new ArrayList<>();
+    public ArrayList<WordCard> readAllWordsFromFile() {
+        ArrayList<WordCard> tempArray = new ArrayList<>();
+
+        try {
+            WordCard wordCard;
+            WordInputStream wordInputStream =
+                    new WordInputStream(new DataInputStream(new FileInputStream(MainClass.mainClass.getFileName())));
+            try {
+                while ((wordCard = wordInputStream.readWordCard()) != null) {
+                    tempArray.add(wordCard);
+                }
+            } catch (Exception e) {
+            }
+        } catch (Exception e) {
+            System.out.println("Error in method readAllWordsFromFile()");
+        }
+        return tempArray;
+    }
+
+    /**
+     * New method for writing one word to file and to Arraylist allWordsList
+     */
+    public void writeOneNewWordToFile(String englishWord, String russianWord) {
+        WordCard newWord;
+        try {
+            WordOutputStream wordOutputStream =
+                    new WordOutputStream(new DataOutputStream(new FileOutputStream(MainClass.mainClass.getFileName(), true)));
+            newWord = new WordCard(englishWord, russianWord);
+            if (!containedThisWord(newWord) && !englishWord.equals("") && !russianWord.equals("")) {
+                wordOutputStream.writeWordCard(newWord);
+                MainClass.mainClass.dictionary.allWordsList.add(newWord);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in method writeOneNewWordToFile(String englishWord, String russianWord)");
+        }
+    }
+
+
+
+    /**
+     * Считываем слова из файла и возвращаем упорядоченный по алфавиту(Англ слова) массив карточек
+     *//*
+    public ArrayList<WordCard> readWordsFromFile() {
+        ArrayList<WordCard> resultList = new ArrayList<>();
         String temp;
-        Card tempCard;
+        WordCard tempWordCard;
 
         try (BufferedReader reader =
                      new BufferedReader(new InputStreamReader(new FileInputStream(MainClass.mainClass.getFileName()),
@@ -51,8 +92,8 @@ public class Dictionary {
             while (reader.ready()) {
                 temp = reader.readLine().toLowerCase();
                 String[] wordInfo = temp.split("-");
-                tempCard = new Card(wordInfo[0], wordInfo[1], Integer.parseInt(wordInfo[2]), wordInfo[3]);
-                resultList.add(tempCard);
+                tempWordCard = new WordCard(wordInfo[0], wordInfo[1], Integer.parseInt(wordInfo[2]), wordInfo[3]);
+                resultList.add(tempWordCard);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -61,14 +102,12 @@ public class Dictionary {
         Collections.sort(resultList);
 
         return resultList;
-    }
+    }*/
 
 
     /**
-     *
      * Перезаписываем allWordsList в ФАЙЛ
-     *
-     */
+     *//*
     public void saveDictionaryToFile() {
 
         try (BufferedWriter writerToFile =
@@ -76,21 +115,30 @@ public class Dictionary {
                              , false),
                              "UTF-8"))) {
 
-            for (Card x : allWordsList) {
+            for (WordCard x : allWordsList) {
                 writerToFile.write(x.getEnglishWord() + "-" + x.getRussianWord() + "-" + x.getCount() + "-" + x.getIsLearning() + "\r");
                 writerToFile.flush();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }*/
+
+
+    public void saveDictionaryToFile() {
+        try(WordOutputStream wordOutputStream =
+                    new WordOutputStream(new DataOutputStream(new FileOutputStream(MainClass.mainClass.getFileName())))){
+            for (WordCard wordCard : allWordsList){
+                wordOutputStream.writeWordCard(wordCard);
+            }
+        }catch (Exception e){
+            System.out.println("Error in saveDictionaryToFile() method");
+        }
     }
 
-
     /**
-     *
      * Сбрасывает изучаемые слова и прогресс изучения
      * Изменения пишутся в файл
-     *
      */
     public void resetAllProgress() {
 
@@ -98,38 +146,34 @@ public class Dictionary {
                      new BufferedWriter(new OutputStreamWriter(new FileOutputStream(MainClass.mainClass.getFileName(), false),
                              "UTF-8"))) {
 
-            for (Card x : allWordsList) {
+            for (WordCard x : allWordsList) {
                 writerToFile.write(x.getEnglishWord() + "-" + x.getRussianWord() + "-0-no\r");
                 writerToFile.flush();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        allWordsList = readWordsFromFile();
+        allWordsList = readAllWordsFromFile();
     }
 
 
     /**
-     *
      * Сброс прогресса карточки на 0 при ошибке
-     *
      */
-    public void resetOneWordProgress(Card card) {
-        card.setCount(-1);
+    public void resetOneWordProgress(WordCard wordCard) {
+        wordCard.setCount(-1);
     }
 
 
     /**
-     *
      * Проверяем количество повторений слова
      * Устанавливаем no в словаре
      * Слово больше не будет использовано из за count
-     *
      */
-    public void wordTestLearn(Card card) {
+    public void wordTestLearn(WordCard wordCard) {
 
-        if (card.getCount() > countToKnow) {
-            card.setIsLearning("no");
+        if (wordCard.getCount() > countToKnow) {
+            wordCard.setLearning(false);
             studyingWordsList = getStudyingListFromAllWordsList();
         }
     }
@@ -138,7 +182,7 @@ public class Dictionary {
     /**
      * Добавляем слово в allWordsList count устанавливаем = 0.
      * и записываем в файл
-     */
+     *//*
     public void addNewWord(String a, String b) {
 
         try (BufferedWriter writerToFile =
@@ -146,26 +190,26 @@ public class Dictionary {
                              , true),
                              "UTF-8"))) {
 
-            if (!containedThisWord(new Card(a, b, 0, "no")) && !a.equals("") && !b.equals("")) {
+            if (!containedThisWord(new WordCard(a, b, 0, "no")) && !a.equals("") && !b.equals("")) {
                 writerToFile.write(a + "-" + b + "-0-no\r");
                 writerToFile.flush();
-                allWordsList = readWordsFromFile();
+                allWordsList = readAllWordsFromFile();
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
-    public boolean containedThisWord(Card card){
-        return allWordsList.contains(card);
+    public boolean containedThisWord(WordCard wordCard) {
+        return allWordsList.contains(wordCard);
     }
 
 
     /**
      * Получаем случайную карточку из ОСНОВНОГО СЛОВАРЯ!!!!!!
      */
-    public Card getRandomWordFromAllWordList() {
+    public WordCard getRandomWordFromAllWordList() {
         return allWordsList.get((int) (Math.random() * allWordsList.size()));
     }
 
@@ -173,18 +217,18 @@ public class Dictionary {
     /**
      * Получаем случайную карточку из изучаемых слов!!!!!!
      */
-    public Card getRandomWordFromStudyingWordsList() {
+    public WordCard getRandomWordFromStudyingWordsList() {
 
         if (allWordsList.size() < learningWordsCount) {
             new SwingMainPage();
             JOptionPane.showMessageDialog(SwingMainPage.swingMainPage.panel, "Dictionary doesn't exist. Create new " +
                     "Dictionary or change path to file.");
             return null;
-        } else if(studyingWordsList.size() == 0) {
+        } else if (studyingWordsList.size() == 0) {
             new SwingMainPage();
             JOptionPane.showMessageDialog(SwingMainPage.swingMainPage.panel, "All words were learned!");
             return null;
-        } else  {
+        } else {
             return studyingWordsList.get((int) (Math.random() * studyingWordsList.size()));
         }
 
@@ -194,21 +238,21 @@ public class Dictionary {
     /**
      * Получаем 10 случайных карточек в которые включена карточка с изучаемым словом для КНОПОК.
      */
-    public ArrayList<Card> getRandomList(Card learningWordCard) {
+    public ArrayList<WordCard> getRandomList(WordCard learningWordWordCard) {
 
-        ArrayList<Card> list = new ArrayList<>();
+        ArrayList<WordCard> list = new ArrayList<>();
 
         int rand = (int) (Math.random() * 10);
         int i = 0;
 
-        Card card;
+        WordCard wordCard;
         while (list.size() < 10) {
-            card = getRandomWordFromAllWordList();
+            wordCard = getRandomWordFromAllWordList();
             if (i == rand) {
-                list.add(learningWordCard);
+                list.add(learningWordWordCard);
                 i++;
-            } else if (!list.contains(card) && !card.equals(learningWordCard)) {
-                list.add(card);
+            } else if (!list.contains(wordCard) && !wordCard.equals(learningWordWordCard)) {
+                list.add(wordCard);
                 i++;
             }
         }
@@ -221,10 +265,10 @@ public class Dictionary {
      * Если ещё список слов не получен  и нет изучаемых слов
      * то добираем новые слова из файла
      */
-    public ArrayList<Card> getStudyingListFromAllWordsList() {
+    public ArrayList<WordCard> getStudyingListFromAllWordsList() {
 
 
-        ArrayList<Card> list = new ArrayList<>();
+        ArrayList<WordCard> list = new ArrayList<>();
         int i = 0;
 
 
@@ -232,20 +276,20 @@ public class Dictionary {
             return list;
         }
 
-        for (Card x : allWordsList) {
-            if (x.getIsLearning().equals("yes")) {
+        for (WordCard x : allWordsList) {
+            if (x.isLearning()) {
                 list.add(x);
             }
         }
 
         if (list.size() < learningWordsCount) {
-            Card card;
+            WordCard wordCard;
             while (list.size() < learningWordsCount) {
-                card = getRandomWordFromAllWordList();
+                wordCard = getRandomWordFromAllWordList();
 
-                if (!list.contains(card) && card.getCount() < countToKnow) {
-                    card.setIsLearning("yes");
-                    list.add(card);
+                if (!list.contains(wordCard) && wordCard.getCount() < countToKnow) {
+                    wordCard.setLearning(true);
+                    list.add(wordCard);
                 }
                 i++;
                 if (i > allWordsList.size()) break;
@@ -254,10 +298,10 @@ public class Dictionary {
         return list;
     }
 
-    public int learnedWordsCounter(){
+    public int learnedWordsCounter() {
         int count = 0;
-        for(Card x : allWordsList){
-            if(x.getCount() > countToKnow){
+        for (WordCard x : allWordsList) {
+            if (x.getCount() > countToKnow) {
                 count++;
             }
         }

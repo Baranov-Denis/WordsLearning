@@ -18,6 +18,14 @@ public class MainClass {
         mainClass = new MainClass();
         mainClass.loadSetting();
         mainClass.run();
+
+        ArrayList<WordCard> t = new ArrayList<>();
+        t = MainClass.mainClass.dictionary.readAllWordsFromFile();
+        for (WordCard x: t) System.out.println(x.getEnglishWord() + " " + x.getRussianWord() + " " + x.getCount() +
+                " " + x.isLearning());
+
+
+
     }
 
     public ArrayList<String> getSettings() {

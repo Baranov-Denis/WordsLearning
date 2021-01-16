@@ -122,6 +122,9 @@ public class SwingSettingsMode {
 
         buttonSelectDictionary = new MyButton("Dictionary : " + MainClass.mainClass.getFileName());
         buttonSelectDictionary.addActionListener(this::actionForChangeDirectory);
+
+
+
         panel.add(dark);
         panel.add(light);
         panel.add(buttonChangeCountWordRepeats);
@@ -175,8 +178,10 @@ public class SwingSettingsMode {
         }
     }*/
 
+
+
     public void actionForChangeDirectory(ActionEvent e){
-        JFileChooser chooser = new JFileChooser();
+       JFileChooser chooser = new JFileChooser();
         chooser.setCurrentDirectory(new File("."));
         int temp = chooser.showDialog(panel, "Открыть файл");
         if (temp == JFileChooser.APPROVE_OPTION) {
