@@ -4,8 +4,8 @@ import java.awt.*;
 
 public class MyButton extends JButton {
 
-    private Color hoverBackgroundColor = MyColors.BUTTON_HOVER;
-    private Color pressedBackgroundColor = MyColors.BUTTON_PRESSED;
+    private final Color hoverBackgroundColor = MyColors.BUTTON_HOVER;
+    private final Color pressedBackgroundColor = MyColors.BUTTON_PRESSED;
 
     public MyButton(String text) {
         super(text);

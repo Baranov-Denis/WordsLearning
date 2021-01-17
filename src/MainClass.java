@@ -5,44 +5,119 @@ import java.util.ArrayList;
 
 public class MainClass {
     public static MainClass mainClass;
-    public Dictionary dictionary;
-    public MyColors myColors;
+    public static Dictionary dictionary;
+    private static boolean themeDark;
+    private static String dictionaryFilePath;
+    private static int numberOfRepeatOfASingleWord;
+    private static int numberOfLearningWords;
+    private static String settingFilePath = "newSetting.txt";
+    public static MyColors myColors;
     JFrame frame;
     JPanel panel;
-    private ArrayList<String> settings;
-    private boolean ThemeDark;
 
-    private String fileName;
+    public static boolean isThemeDark() {
+        return themeDark;
+    }
 
+    public static void setThemeDark(boolean themeDark) {
+        MainClass.themeDark = themeDark;
+    }
+
+    public static int getNumberOfRepeatOfASingleWord() {
+        return numberOfRepeatOfASingleWord;
+    }
+
+    public static void setNumberOfRepeatOfASingleWord(int numberOfRepeatOfASingleWord) {
+        MainClass.numberOfRepeatOfASingleWord = numberOfRepeatOfASingleWord;
+    }
+
+    public static int getNumberOfLearningWords() {
+        return numberOfLearningWords;
+    }
+
+    public static void setNumberOfLearningWords(int numberOfLearningWords) {
+        MainClass.numberOfLearningWords = numberOfLearningWords;
+    }
+
+    public static String getDictionaryFilePath() {
+        return dictionaryFilePath;
+    }
+
+    public static void setDictionaryFilePath(String dictionaryFilePath) {
+        MainClass.dictionaryFilePath = dictionaryFilePath;
+    }
+
+    public String getSettingFilePath() {
+        return settingFilePath;
+    }
+
+    public void setSettingFilePath(String settingFilePath) {
+        MainClass.settingFilePath = settingFilePath;
+    }
+
+    /**
+     * MAIN METHOD!!!!!
+     *
+     *
+     */
     public static void main(String[] args) {
         mainClass = new MainClass();
-        mainClass.loadSetting();
+        loadSettingFromFile(settingFilePath);
         mainClass.run();
-
-        ArrayList<WordCard> t = new ArrayList<>();
-        t = MainClass.mainClass.dictionary.readAllWordsFromFile();
-        for (WordCard x: t) System.out.println(x.getEnglishWord() + " " + x.getRussianWord() + " " + x.getCount() +
-                " " + x.isLearning());
-
-
-
     }
 
-    public ArrayList<String> getSettings() {
-        return settings;
+    /**
+     * New method for loadSetting from file
+     *
+     * @param settingFilePath path to file with settings
+     */
+    public static void loadSettingFromFile(String settingFilePath) {
+        try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(settingFilePath))) {
+            dictionaryFilePath = dataInputStream.readUTF();
+            themeDark = dataInputStream.readBoolean();
+            numberOfRepeatOfASingleWord = dataInputStream.readInt();
+            numberOfLearningWords = dataInputStream.readInt();
+        } catch (IOException r) {
+            try (DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(MainClass.settingFilePath))) {
+                dataOutputStream.writeUTF("dict.txt");//Path to dictionary file
+                dataOutputStream.writeBoolean(true);//Boolean isThemeDark if true then theme will be dark
+                dataOutputStream.writeInt(15);//number how many times will be repeated learning word
+                dataOutputStream.writeInt(10);//number how many words in learning
+                loadSettingFromFile(settingFilePath);
+            } catch (Exception e) {
+                System.out.println("Error in loadSettingFromFile(String settingFilePath) method");
+            }
+        }
     }
 
-    public String getFileName() {
-        return fileName;
+
+    /**
+     * New method to save setting to file
+     *
+     *
+     * @param settingFilePath path to file with settings
+     *
+     */
+    public void saveSettingToFile(String settingFilePath) {
+        try (DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(settingFilePath))) {
+            dataOutputStream.writeUTF(dictionaryFilePath);//Path to dictionary file
+            dataOutputStream.writeBoolean(themeDark);//Boolean isThemeDark if true then theme will be dark
+            dataOutputStream.writeInt(numberOfRepeatOfASingleWord);//number how many times will be repeated learning word
+            dataOutputStream.writeInt(numberOfLearningWords);//number how many words in learning
+            dataOutputStream.flush();
+        } catch (IOException e) {
+            System.out.println("Error in saveSettingToFile(ArrayList<String> settings,String settingFilePath) method");
+        }
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
 
+    /***
+     *
+     * Start Swing and app
+     *
+     */
     private void run() {
         dictionary = new Dictionary();
-
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -56,51 +131,13 @@ public class MainClass {
                 panel.setPreferredSize(new Dimension(340, 585));
                 frame.add(panel);
                 frame.setVisible(true);
+                myColors = new MyColors(themeDark);
                 new SwingMainPage();
             }
         });
     }
 
-    private void loadSetting() {
-        settings = new ArrayList<>();
 
-        try (FileInputStream fileInputStream = new FileInputStream("settings.txt");
-             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, "UTF-8");
-             BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
-
-            while (bufferedReader.ready()) {
-                settings.add(bufferedReader.readLine());
-            }
-
-            setFileName(settings.get(0));
-
-            ThemeDark = settings.get(1).equals("dark");
-            myColors = new MyColors(ThemeDark);
-
-
-        } catch (Exception e) {
-            System.out.println("ERROR");
-            try (BufferedWriter writer =
-                         new BufferedWriter(new OutputStreamWriter(new FileOutputStream("settings.txt", false),
-                                 "UTF-8"))) {
-                writer.write("MyDi.dict\r");
-                settings.add("MyDi.dict");
-                writer.write("dark\n");
-                settings.add("dark");
-                writer.write("15\n");
-                settings.add("15");
-                writer.flush();
-                ThemeDark = settings.get(1).equals("dark");
-                myColors = new MyColors(ThemeDark);
-                loadSetting();
-
-            } catch (Exception r) {
-
-            }
-        }
-
-
-    }
 
 
 }

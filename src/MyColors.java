@@ -18,6 +18,22 @@ public class MyColors {
         }
     }
 
+    public void changeTheme(boolean dark){
+        if(dark){
+            FONT = darkFont;
+            BUTTON_COLOR = darkButtons;
+            BUTTON_HOVER = darkButtonsHover;
+            BUTTON_PRESSED = darkButtonsPressed;
+            BACKGROUND = darkBackground;
+        }else{
+            FONT = lightFont;
+            BUTTON_COLOR = lightButtons;
+            BUTTON_HOVER = lightButtonsHover;
+            BUTTON_PRESSED = lightButtonsPressed;
+            BACKGROUND = lightBackground;
+        }
+    }
+
 
 
     private static final Color red = new Color(255, 100, 100);

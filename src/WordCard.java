@@ -5,17 +5,17 @@ public class WordCard implements Comparable<WordCard>{
     private final String russianWord;
     private int count;
     private boolean isLearning;
-    private boolean isLearned;
+    //private boolean isLearned;
 
     public WordCard(String englishWord, String russianWord) {
         this.englishWord = englishWord;
         this.russianWord = russianWord;
         this.count = 0;
         this.isLearning = false;
-        this.isLearned = false;
+       // this.isLearned = false;
     }
 
-    public WordCard(String englishWord, String russianWord, int count, String isLearning) {
+    public WordCard(String englishWord, String russianWord, int count) {
         this.englishWord = englishWord;
         this.russianWord = russianWord;
         this.count = count;

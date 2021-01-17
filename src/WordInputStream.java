@@ -1,7 +1,7 @@
 import java.io.DataInput;
 import java.io.IOException;
 
-public class WordInputStream implements DataInput {
+public class WordInputStream implements DataInput, AutoCloseable {
 
     private final DataInput dataInput;
 
@@ -96,4 +96,8 @@ public class WordInputStream implements DataInput {
     }
 
 
+    @Override
+    public void close() throws Exception {
+
+    }
 }

@@ -2,11 +2,7 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Date;
 
 public class SwingSettingsMode {
 
@@ -22,12 +18,11 @@ public class SwingSettingsMode {
 
 
 
-    private ArrayList<String> tempSettings;
+
 
 
     public SwingSettingsMode() {
         swingSettingsMode = this;
-        tempSettings = MainClass.mainClass.getSettings();
 
         frame = MainClass.mainClass.frame;
         panel = SwingMainPage.swingMainPage.panel;
@@ -40,7 +35,7 @@ public class SwingSettingsMode {
             int inp = JOptionPane.showConfirmDialog(panel, "All progress will be reset!!!");
 
             if (inp == 0) {
-                MainClass.mainClass.dictionary.resetAllProgress();
+              MainClass.dictionary.resetAllProgress();
                 statistic.setText(wordsCountUpdate());
             }
         });
@@ -52,9 +47,8 @@ public class SwingSettingsMode {
 
 
         buttonBack = new MyButton("<---Back");
-        buttonBack.addActionListener(e -> {
-            new SwingMainPage();
-        });
+        buttonBack.addActionListener(e -> new SwingMainPage()
+        );
 
 
         buttonGroup = new ButtonGroup();
@@ -67,7 +61,7 @@ public class SwingSettingsMode {
         light.setForeground(MyColors.FONT);
         light.setPreferredSize(new Dimension(158, 41));
 
-        if (MainClass.mainClass.getSettings().get(1).equals("dark")) {
+        if (MainClass.isThemeDark()) {
             dark.setSelected(true);
         } else {
             light.setSelected(true);
@@ -78,17 +72,17 @@ public class SwingSettingsMode {
         buttonGroup.add(light);
 
         light.addActionListener(e -> {
-            tempSettings.set(1, "light");
-            saveSettings();
-            MainClass.mainClass.myColors = new MyColors(false);
+            MainClass.setThemeDark(false);
+            MainClass.mainClass.saveSettingToFile(MainClass.mainClass.getSettingFilePath());
+            MainClass.myColors.changeTheme(false);
             new SwingSettingsMode();
             SwingUtilities.updateComponentTreeUI(frame);
         });
 
         dark.addActionListener(e -> {
-            tempSettings.set(1, "dark");
-            saveSettings();
-            MainClass.mainClass.myColors = new MyColors(true);
+            MainClass.setThemeDark(true);
+            MainClass.mainClass.saveSettingToFile(MainClass.mainClass.getSettingFilePath());
+            MainClass.myColors.changeTheme(true);
             new SwingSettingsMode();
             SwingUtilities.updateComponentTreeUI(frame);
         });
@@ -97,22 +91,24 @@ public class SwingSettingsMode {
         buttonChangeCountWordRepeats.setPreferredSize(new Dimension(233, 41));
         fieldChangeCountWordRepeats = new JTextField(3);
         fieldChangeCountWordRepeats.setFont(new Font("sans-serif", Font.BOLD, 28));
-        fieldChangeCountWordRepeats.setBorder(new BevelBorder(1));
+        fieldChangeCountWordRepeats.setBorder(new BevelBorder(BevelBorder.LOWERED));
         fieldChangeCountWordRepeats.setCaretColor(MyColors.FONT);
         fieldChangeCountWordRepeats.setForeground(MyColors.FONT);
         fieldChangeCountWordRepeats.setBackground(MyColors.BUTTON_COLOR);
-        fieldChangeCountWordRepeats.setText("" + MainClass.mainClass.dictionary.getCountToKnow());
+        fieldChangeCountWordRepeats.setText("" + MainClass.dictionary.getCountToKnow());
         buttonChangeCountWordRepeats.addActionListener(e -> {
-            int temp = MainClass.mainClass.dictionary.getCountToKnow();
+            int temp = MainClass.dictionary.getCountToKnow();
             try {
                 temp = Integer.parseInt(fieldChangeCountWordRepeats.getText());
             } catch (NumberFormatException r) {
                 System.out.println("Err");
             }
             if (temp > 1 && temp < 100) {
-                MainClass.mainClass.dictionary.setCountToKnow(temp);
-                tempSettings.set(2, temp + "");
-                saveSettings();
+                MainClass.dictionary.setCountToKnow(temp);
+                //tempSettings.set(2, temp + "");
+                MainClass.setNumberOfRepeatOfASingleWord(temp);
+                //saveSettings();
+                MainClass.mainClass.saveSettingToFile(MainClass.mainClass.getSettingFilePath());
             }
         });
 
@@ -120,7 +116,7 @@ public class SwingSettingsMode {
 
 
 
-        buttonSelectDictionary = new MyButton("Dictionary : " + MainClass.mainClass.getFileName());
+        buttonSelectDictionary = new MyButton("Dictionary : " + MainClass.getDictionaryFilePath());
         buttonSelectDictionary.addActionListener(this::actionForChangeDirectory);
 
 
@@ -145,38 +141,10 @@ public class SwingSettingsMode {
         return String.format("<html><div style=\"text-align: center; margin : auto; width: 335\">Learned <font size =" +
                         " 5> %s </font>" +
                         "from <font size = 5> %s </font>words.</div></html>",
-                MainClass.mainClass.dictionary.learnedWordsCounter(),
-                MainClass.mainClass.dictionary.getAllWordsList().size()  ) ;
+                MainClass.dictionary.learnedWordsCounter(),
+                MainClass.dictionary.getAllWordsList().size()  ) ;
     }
 
-/*
-    public void actionPerformed(ActionEvent e) {
-        JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(new File("."));
-        int temp = chooser.showDialog(panel, "Открыть файл");
-        if (temp == JFileChooser.APPROVE_OPTION) {
-            File file = chooser.getSelectedFile();
-            String fileName = file.getAbsolutePath();
-            tempSettings.set(0, fileName);
-            saveSettings();
-            MainClass.mainClass.dictionary.getAllWordsList().clear();
-            MainClass.mainClass.setFileName(fileName);
-            MainClass.mainClass.dictionary = new Dictionary();
-            buttonSelectDictionary.setText("Dictionary : " + MainClass.mainClass.getFileName());
-        }
-    }
-
-   private void changeTheme(String theme) {
-        ArrayList<String> settings = MainClass.mainClass.getSettings();
-        MainClass.mainClass.getSettings().set(1, theme);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("settings.txt", false))) {
-            writer.write(settings.get(0) + "\r");
-            writer.write(theme);
-            writer.flush();
-        } catch (Exception r) {
-
-        }
-    }*/
 
 
 
@@ -187,40 +155,15 @@ public class SwingSettingsMode {
         if (temp == JFileChooser.APPROVE_OPTION) {
             File file = chooser.getSelectedFile();
             String fileName = file.getAbsolutePath();
-            tempSettings.set(0, fileName);
-            saveSettings();
-            MainClass.mainClass.dictionary.getAllWordsList().clear();
-            MainClass.mainClass.setFileName(fileName);
-            MainClass.mainClass.dictionary = new Dictionary();
-            buttonSelectDictionary.setText("Dictionary : " + MainClass.mainClass.getFileName());
+            MainClass.setDictionaryFilePath(fileName);
+            MainClass.mainClass.saveSettingToFile(MainClass.mainClass.getSettingFilePath());
+            MainClass.dictionary.getAllWordsList().clear();
+            MainClass.setDictionaryFilePath(fileName);
+            MainClass.dictionary = new Dictionary();
+            buttonSelectDictionary.setText("Dictionary : " + MainClass.getDictionaryFilePath());
             statistic.setText(wordsCountUpdate());
         }
 
-    }
-/*
-    private void changeDictionary(String path) {
-        ArrayList<String> settings = MainClass.mainClass.getSettings();
-        MainClass.mainClass.getSettings().set(0, path);
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("settings.txt", false))) {
-            writer.write(path + "\r");
-            writer.write(settings.get(1) + "\r");
-            writer.flush();
-        } catch (Exception r) {
-
-        }
-    }
-*/
-    private void saveSettings() {
-
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("settings.txt", false))) {
-            writer.write(tempSettings.get(0) + "\r");
-            writer.write(tempSettings.get(1) + "\r");
-            writer.write(tempSettings.get(2) + "\r");
-            writer.flush();
-        } catch (Exception r) {
-
-        }
     }
 
 

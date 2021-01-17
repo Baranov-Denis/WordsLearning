@@ -4,27 +4,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
 public class SwingSavingMode implements ActionListener {
 
     public static SwingSavingMode swingSawingMode;
-    private final MyButton saveButton;
-    private final MyButton backButton;
     JLabel systemMessage;
-    private JFrame frame;
-    private JPanel panel;
-    private JTextField textFieldForEnglishWord;
-    private JTextField textFieldForRussianWord;
-    private JLabel dictionaryCount;
-    private JLabel englishLabel;
-    private JLabel russianLabel;
-    private JLabel empty;
+    private final JTextField textFieldForEnglishWord;
+    private final JTextField textFieldForRussianWord;
+    private final JLabel dictionaryCount;
 
 
     public SwingSavingMode() {
 
         swingSawingMode = this;
-        frame = MainClass.mainClass.frame;
-        panel = SwingMainPage.swingMainPage.panel;
+        JFrame frame = MainClass.mainClass.frame;
+        JPanel panel = SwingMainPage.swingMainPage.panel;
         panel.removeAll();
 
 
@@ -33,24 +27,24 @@ public class SwingSavingMode implements ActionListener {
         dictionaryCount.setPreferredSize(new Dimension(335, 220));
         dictionaryCount.setFont(new Font("sans-serif", Font.BOLD, 14));
 
-        englishLabel = new JLabel("Enter English word: ");
+        JLabel englishLabel = new JLabel("Enter English word: ");
         englishLabel.setPreferredSize(new Dimension(150, 70));
         englishLabel.setFont(new Font("sans-serif", Font.PLAIN, 16));
 
-        russianLabel = new JLabel("Enter Russian word: ");
+        JLabel russianLabel = new JLabel("Enter Russian word: ");
         russianLabel.setPreferredSize(new Dimension(150, 70));
         russianLabel.setFont(new Font("sans-serif", Font.PLAIN, 16));
 
         textFieldForEnglishWord = new JTextField(9);
         textFieldForEnglishWord.setFont(new Font("sans-serif", Font.PLAIN, 20));
-        textFieldForEnglishWord.setBorder(new BevelBorder(1));
+        textFieldForEnglishWord.setBorder(new BevelBorder(BevelBorder.LOWERED));
         textFieldForEnglishWord.setCaretColor(MyColors.FONT);
         textFieldForEnglishWord.setBackground(MyColors.BUTTON_COLOR);
         textFieldForEnglishWord.setForeground(MyColors.FONT);
 
         textFieldForRussianWord = new JTextField(9);
         textFieldForRussianWord.setFont(new Font("sans-serif", Font.PLAIN, 20));
-        textFieldForRussianWord.setBorder(new BevelBorder(1));
+        textFieldForRussianWord.setBorder(new BevelBorder(BevelBorder.LOWERED));
         textFieldForRussianWord.setCaretColor(MyColors.FONT);
         textFieldForRussianWord.setBackground(MyColors.BUTTON_COLOR);
         textFieldForRussianWord.setForeground(MyColors.FONT);
@@ -60,20 +54,16 @@ public class SwingSavingMode implements ActionListener {
         systemMessage.setFont(new Font("sans-serif", Font.BOLD, 14));
 
 
-        saveButton = new MyButton("Save");
-        saveButton.addActionListener(e -> {
-            addNewWord();
-        });
+        MyButton saveButton = new MyButton("Save");
+        saveButton.addActionListener(e -> addNewWord());
         saveButton.setPreferredSize(new Dimension(100, 27));
 
-        empty = new JLabel();
+        JLabel empty = new JLabel();
         empty.setPreferredSize(new Dimension(100, 20));
 
 
-        backButton = new MyButton("<---Back");
-        backButton.addActionListener(e -> {
-            new SwingMainPage();
-        });
+        MyButton backButton = new MyButton("<---Back");
+        backButton.addActionListener(e -> new SwingMainPage());
         backButton.setPreferredSize(new Dimension(100, 27));
 
         panel.add(dictionaryCount);
@@ -99,7 +89,7 @@ public class SwingSavingMode implements ActionListener {
         return String.format("<html> <div style=\"text-align: center; margin : auto; width: 335\">The " +
                         "dictionary has <br><font size = 22> %s </font><br>" +
                         "words.<br><font size = 22> %s </font><br>of them were learned.</div></html>",
-                MainClass.mainClass.dictionary.getAllWordsList().size() , MainClass.mainClass.dictionary.learnedWordsCounter()) ;
+                MainClass.dictionary.getAllWordsList().size() , MainClass.dictionary.learnedWordsCounter()) ;
     }
 
 
@@ -108,13 +98,11 @@ public class SwingSavingMode implements ActionListener {
      *
      * @param eng английское слово
      * @param rus русское слово
-     * @return
+     * @return system message
      */
     private String systemMessageUpdate(String eng, String rus) {
-        System.out.println(MainClass.mainClass.dictionary.containedThisWord(new WordCard(eng,
-                rus, 0 , "no")));
-        if (!eng.equals("") && !rus.equals("") && !MainClass.mainClass.dictionary.containedThisWord(new WordCard(eng,
-                rus, 0 , "no"))) {
+        if (!eng.equals("") && !rus.equals("") && !MainClass.dictionary.containedThisWord(new WordCard(eng,
+                rus, 0 ))) {
 
             return String.format("<html> <div style=\"text-align:" +
                             " center; margin : auto; width: 335;color : rgb(0, 155, 0)\"> <font size = 9>  " +
@@ -143,13 +131,13 @@ public class SwingSavingMode implements ActionListener {
      * запускает сохранение карточки в файл
      * очищает поля ввода
      * обновляет поле с количеством слов в словаре и сообщение об успешном сохранении или ошибке
+     * In this method all the words make to lower case and trim space
      */
     private void addNewWord() {
-        String eng = textFieldForEnglishWord.getText();
-        String rus = textFieldForRussianWord.getText();
+        String eng = textFieldForEnglishWord.getText().toLowerCase().trim();
+        String rus = textFieldForRussianWord.getText().toLowerCase().trim();
         systemMessage.setText(systemMessageUpdate(eng, rus));
-       // MainClass.mainClass.dictionary.addNewWord(eng, rus);
-        MainClass.mainClass.dictionary.writeOneNewWordToFile(eng,rus);
+        MainClass.dictionary.writeOneNewWordToFile(eng,rus);
         textFieldForEnglishWord.setText("");
         textFieldForRussianWord.setText("");
         dictionaryCount.setText(wordsCountUpdate());

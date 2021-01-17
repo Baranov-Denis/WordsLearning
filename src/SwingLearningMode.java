@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +18,6 @@ public class SwingLearningMode implements ActionListener {
 
     WordCard learningWordWordCard;
     ArrayList<WordCard> randomWordCards;
-    ArrayList<JButton> buttons;
 
     MyButton button;
 
@@ -28,11 +26,10 @@ public class SwingLearningMode implements ActionListener {
 
 
 
-    int random;
 
     public SwingLearningMode() {
 
-        MainClass.mainClass.dictionary = new Dictionary();
+        MainClass.dictionary = new Dictionary();
         swingLearningMode = this;
 
         frame = SwingMainPage.swingMainPage.frame;
@@ -45,11 +42,9 @@ public class SwingLearningMode implements ActionListener {
 
         backButton = new MyButton("<---Back");
         backButton.setPreferredSize(new Dimension(70, 41));
-        backButton.addActionListener(e -> {
-            new SwingMainPage();
-        });
+        backButton.addActionListener(e -> new SwingMainPage());
         backButton.setMargin(new Insets(0, -3, 0, -3));
-        backButton.setBorder(new BevelBorder(5));
+        //backButton.setBorder(new BevelBorder(0));
 
         buttonPanel = new JPanel();
         buttonPanel.setPreferredSize(new Dimension(340, 467));
@@ -64,7 +59,7 @@ public class SwingLearningMode implements ActionListener {
 
 
 
-            learningWordWordCard = MainClass.mainClass.dictionary.getRandomWordFromStudyingWordsList();
+            learningWordWordCard = MainClass.dictionary.getRandomWordFromStudyingWordsList();
             if(learningWordWordCard !=null) {
                 wordForLearnLabel.setText(learningWordWordCard.getEnglishWord());
             }else return;
@@ -77,9 +72,10 @@ public class SwingLearningMode implements ActionListener {
 
 
 
-        randomWordCards = MainClass.mainClass.dictionary.getRandomList(learningWordWordCard);
+        randomWordCards = MainClass.dictionary.getRandomList(learningWordWordCard);
 
-        countLearn = new JLabel(String.format(" %s / %s", learningWordWordCard.getCount(), MainClass.mainClass.dictionary.getCountToKnow()), SwingConstants.CENTER);
+        countLearn = new JLabel(String.format(" %s / %s", learningWordWordCard.getCount(),
+                MainClass.dictionary.getCountToKnow()), SwingConstants.CENTER);
         countLearn.setPreferredSize(new Dimension(200, 40));
 
         panel.add(countLearn);
@@ -135,9 +131,9 @@ public class SwingLearningMode implements ActionListener {
         panel.removeAll();//Удаляем кнопки
 
 
-        learningWordWordCard = MainClass.mainClass.dictionary.getRandomWordFromStudyingWordsList();//Получаем случайное
+        learningWordWordCard = MainClass.dictionary.getRandomWordFromStudyingWordsList();//Получаем случайное
         // слово из списка изучаемых слов
-        randomWordCards = MainClass.mainClass.dictionary.getRandomList(learningWordWordCard);//Получаем 10 случайных карточек
+        randomWordCards = MainClass.dictionary.getRandomList(learningWordWordCard);//Получаем 10 случайных карточек
         // в которые включена карточка с изучаемым словом для КНОПОК.
         if(learningWordWordCard != null) {
             wordForLearnLabel.setText(learningWordWordCard.getEnglishWord());//Устанавливаем английское слово в поле
@@ -150,7 +146,7 @@ public class SwingLearningMode implements ActionListener {
         panel.add(buttonPanel);
         panel.add(backButton);//Добавляем кноапку назад т.к. очищаем всю пнел removeAll
         countLearn = new JLabel(String.format(" %s / %s", learningWordWordCard.getCount(),
-                MainClass.mainClass.dictionary.getCountToKnow()), SwingConstants.CENTER);// Подписываем количество
+                MainClass.dictionary.getCountToKnow()), SwingConstants.CENTER);// Подписываем количество
         // попыток
         countLearn.setPreferredSize(new Dimension(200, 40));
         panel.add(countLearn);
@@ -163,10 +159,9 @@ public class SwingLearningMode implements ActionListener {
 
         if (e.getActionCommand().equals(learningWordWordCard.getRussianWord())) {
             learningWordWordCard.setCount(learningWordWordCard.getCount() + 1);
-            MainClass.mainClass.dictionary.wordTestLearn(learningWordWordCard);
-            MainClass.mainClass.dictionary.saveDictionaryToFile();
-            System.out.println(MainClass.mainClass.dictionary.getStudyingWordsList().size());
-            if(MainClass.mainClass.dictionary.getStudyingWordsList().size()!=0) {
+            MainClass.dictionary.wordTestLearn(learningWordWordCard);
+            MainClass.dictionary.saveDictionaryToFile();
+            if(MainClass.dictionary.getStudyingWordsList().size()!=0) {
                 nextWord();
             }else{
                 new SwingMainPage();
@@ -174,7 +169,7 @@ public class SwingLearningMode implements ActionListener {
             }
 
         } else {
-            MainClass.mainClass.dictionary.resetOneWordProgress(learningWordWordCard);
+            MainClass.dictionary.resetOneWordProgress(learningWordWordCard);
             updateButtons();
         }
     }

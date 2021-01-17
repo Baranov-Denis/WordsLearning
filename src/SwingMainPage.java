@@ -53,34 +53,37 @@ public class SwingMainPage extends JButton implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-                if (e.getActionCommand().equals("Add new words")) {
+        switch (e.getActionCommand()) {
 
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            new SwingSavingMode();
-                        }
-                    });
+            case "Add new words":
 
-                }else if(e.getActionCommand().equals("Learning")){
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        new SwingSavingMode();
+                    }
+                });
+                break;
 
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            new SwingLearningMode();
-                        }
-                    });
+            case "Learning":
 
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        new SwingLearningMode();
+                    }
+                });
+                break;
 
-                }else if(e.getActionCommand().equals("Settings")){
+            case "Settings":
 
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            new SwingSettingsMode();
-                        }
-                    });
-                }
-
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        new SwingSettingsMode();
+                    }
+                });
+                break;
+        }
     }
 }
