@@ -25,7 +25,7 @@ public class SwingMainPage extends JButton implements ActionListener {
         panel.removeAll();
         panel.setBackground(MyColors.BACKGROUND);
 
-        buttonForSaveNewWords = new MyButton("Add new words");
+        buttonForSaveNewWords = new MyButton("Dictionary editor");
         buttonForSaveNewWords.setPreferredSize(new Dimension(320, 187));
         buttonForSaveNewWords.setFont(buttonFont);
         buttonForSaveNewWords.addActionListener(this);
@@ -55,12 +55,13 @@ public class SwingMainPage extends JButton implements ActionListener {
 
         switch (e.getActionCommand()) {
 
-            case "Add new words":
+            case "Dictionary editor":
 
                 SwingUtilities.invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        new SwingSavingMode();
+                        //new SwingSavingMode();
+                        new SwingDictionaryRedactor();
                     }
                 });
                 break;

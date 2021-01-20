@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class Dictionary {
 
@@ -32,6 +34,16 @@ public class Dictionary {
         studyingWordsList = getStudyingListFromAllWordsList(); //Получаем Список изучаемых слов в настоящее время
     }
 
+    /***
+     * Sort Array List A-Z
+     */
+    private ArrayList<WordCard> sortWordList(ArrayList<WordCard> arrayList){
+
+        Collections.sort(arrayList);
+
+        return arrayList;
+    }
+
     /**
      * Ok1
      * New method for reading all words from File to ArrayList
@@ -40,6 +52,7 @@ public class Dictionary {
      */
     public ArrayList<WordCard> readAllWordsFromFile() {
         ArrayList<WordCard> tempArray = new ArrayList<>();
+
 
         try {
             WordCard wordCard;
@@ -53,6 +66,11 @@ public class Dictionary {
         } catch (Exception e) {
             System.out.println("Error in method readAllWordsFromFile()");
         }
+       /// for (WordCard w : tempArray) System.out.println(w.getEnglishWord());
+        tempArray = sortWordList(tempArray);
+       // System.out.println("-----------------");
+      //  for (WordCard w : tempArray) System.out.println(w.getEnglishWord());
+
         return tempArray;
     }
 
@@ -69,11 +87,33 @@ public class Dictionary {
             if (!containedThisWord(newWord) && !englishWord.equals("") && !russianWord.equals("")) {
                 wordOutputStream.writeWordCard(newWord);
                 allWordsList.add(newWord);
+                allWordsList = sortWordList(allWordsList);
             }
         } catch (Exception e) {
             System.out.println("Error in method writeOneNewWordToFile(String englishWord, String russianWord)");
         }
     }
+
+
+    /**
+     * Ok1
+     * This method gets One word and deleting it from Array List.And then rewrites this Array to file. Then reloads
+     * this array in app.
+     * @param wordCard - word which needs to delete.
+     */
+    public void deleteOneWord(WordCard wordCard){
+        try(WordOutputStream wordOutputStream =
+                    new WordOutputStream(new DataOutputStream(new FileOutputStream(MainClass.getDictionaryFilePath())))){
+            allWordsList.remove(wordCard);//deleting word from allWordsList Array.
+            for (WordCard card : allWordsList){
+                wordOutputStream.writeWordCard(card);
+            }
+            allWordsList = readAllWordsFromFile();
+        }catch (Exception e){
+            System.out.println("Error in deleteOneWord(WordCard wordCard) method");
+        }
+    }
+
 
 
 
@@ -125,6 +165,10 @@ public class Dictionary {
      * Проверяем количество повторений слова
      * Устанавливаем  isLearning  false
      * Слово больше не будет использовано из за count
+     *
+     *
+     * if not add +1 then word will be show more than need!!!!!!! NEED CHANGE!!!!!!!!
+     *
      */
     public void wordTestLearn(WordCard wordCard) {
 

@@ -41,7 +41,7 @@ public class SwingLearningMode implements ActionListener {
 
 
         backButton = new MyButton("<---Back");
-        backButton.setPreferredSize(new Dimension(70, 41));
+       // backButton.setPreferredSize(new Dimension(70, 41));
         backButton.addActionListener(e -> new SwingMainPage());
         backButton.setMargin(new Insets(0, -3, 0, -3));
         //backButton.setBorder(new BevelBorder(0));
@@ -54,7 +54,7 @@ public class SwingLearningMode implements ActionListener {
 
 
         wordForLearnLabel = new JLabel("", SwingConstants.CENTER);
-        wordForLearnLabel.setPreferredSize(new Dimension(250, 50));
+        wordForLearnLabel.setPreferredSize(new Dimension(285, 50));
         wordForLearnLabel.setFont(new Font("sans-serif", Font.BOLD, 35));
 
 
@@ -66,19 +66,22 @@ public class SwingLearningMode implements ActionListener {
 
 
 
-        panel.add(wordForLearnLabel);
-        panel.add(buttonPanel);
-        panel.add(backButton);
+
 
 
 
         randomWordCards = MainClass.dictionary.getRandomList(learningWordWordCard);
 
         countLearn = new JLabel(String.format(" %s / %s", learningWordWordCard.getCount(),
-                MainClass.dictionary.getCountToKnow()), SwingConstants.CENTER);
-        countLearn.setPreferredSize(new Dimension(200, 40));
+                MainClass.dictionary.getCountToKnow()), SwingConstants.LEFT);
+        countLearn.setPreferredSize(new Dimension(40, 40));
 
+
+        panel.add(wordForLearnLabel);
         panel.add(countLearn);
+        panel.add(buttonPanel);
+        panel.add(backButton);
+
 
         createButtons();
 
@@ -138,18 +141,22 @@ public class SwingLearningMode implements ActionListener {
         if(learningWordWordCard != null) {
             wordForLearnLabel.setText(learningWordWordCard.getEnglishWord());//Устанавливаем английское слово в поле
             // изучаеиого слова
+
         }
 
 
         panel.add(wordForLearnLabel);//Добавляем на панель изучаеиое слово
+        panel.add(countLearn);
+        countLearn.setText(String.format(" %s / %s", learningWordWordCard.getCount(),
+                MainClass.dictionary.getCountToKnow()));// Подписываем количество
+        // попыток
+
         createButtons();//Создаём кнопки ипомещаем их на buttonPanel
         panel.add(buttonPanel);
         panel.add(backButton);//Добавляем кноапку назад т.к. очищаем всю пнел removeAll
-        countLearn = new JLabel(String.format(" %s / %s", learningWordWordCard.getCount(),
-                MainClass.dictionary.getCountToKnow()), SwingConstants.CENTER);// Подписываем количество
-        // попыток
-        countLearn.setPreferredSize(new Dimension(200, 40));
-        panel.add(countLearn);
+
+       // countLearn.setPreferredSize(new Dimension(200, 40));
+
 
     }
 

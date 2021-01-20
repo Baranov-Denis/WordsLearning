@@ -47,7 +47,10 @@ public class SwingSettingsMode {
 
 
         buttonBack = new MyButton("<---Back");
-        buttonBack.addActionListener(e -> new SwingMainPage()
+        buttonBack.addActionListener(e -> {
+            saveCountRepeat();
+            new SwingMainPage();
+                }
         );
 
 
@@ -56,6 +59,7 @@ public class SwingSettingsMode {
         dark.setBackground(MyColors.BUTTON_COLOR);
         dark.setForeground(MyColors.FONT);
         dark.setPreferredSize(new Dimension(157, 41));
+
         light = new JRadioButton("Light");
         light.setBackground(MyColors.BUTTON_COLOR);
         light.setForeground(MyColors.FONT);
@@ -97,20 +101,12 @@ public class SwingSettingsMode {
         fieldChangeCountWordRepeats.setBackground(MyColors.BUTTON_COLOR);
         fieldChangeCountWordRepeats.setText("" + MainClass.dictionary.getCountToKnow());
         buttonChangeCountWordRepeats.addActionListener(e -> {
-            int temp = MainClass.dictionary.getCountToKnow();
-            try {
-                temp = Integer.parseInt(fieldChangeCountWordRepeats.getText());
-            } catch (NumberFormatException r) {
-                System.out.println("Err");
-            }
-            if (temp > 1 && temp < 100) {
-                MainClass.dictionary.setCountToKnow(temp);
-                //tempSettings.set(2, temp + "");
-                MainClass.setNumberOfRepeatOfASingleWord(temp);
-                //saveSettings();
-                MainClass.mainClass.saveSettingToFile(MainClass.mainClass.getSettingFilePath());
-            }
+           saveCountRepeat();
         });
+
+        JLabel numberOfRepetitionsOfAWordToLearn = new JLabel("Number of repetitions of a word");
+        numberOfRepetitionsOfAWordToLearn.setPreferredSize(new Dimension(233, 41));
+        numberOfRepetitionsOfAWordToLearn.setFont(new Font("sans-serif", Font.BOLD, 14));
 
 
 
@@ -123,7 +119,8 @@ public class SwingSettingsMode {
 
         panel.add(dark);
         panel.add(light);
-        panel.add(buttonChangeCountWordRepeats);
+       // panel.add(buttonChangeCountWordRepeats);
+        panel.add(numberOfRepetitionsOfAWordToLearn);
         panel.add(fieldChangeCountWordRepeats);
         panel.add(buttonSelectDictionary);
         panel.add(statistic);
@@ -135,6 +132,22 @@ public class SwingSettingsMode {
 
 
         SwingUtilities.updateComponentTreeUI(frame);
+    }
+
+    private void saveCountRepeat(){
+        int temp = MainClass.dictionary.getCountToKnow();
+        try {
+            temp = Integer.parseInt(fieldChangeCountWordRepeats.getText());
+        } catch (NumberFormatException r) {
+            System.out.println("Err");
+        }
+        if (temp > 1 && temp < 100) {
+            MainClass.dictionary.setCountToKnow(temp);
+            //tempSettings.set(2, temp + "");
+            MainClass.setNumberOfRepeatOfASingleWord(temp);
+            //saveSettings();
+            MainClass.mainClass.saveSettingToFile(MainClass.mainClass.getSettingFilePath());
+        }
     }
 
     private String wordsCountUpdate() {
