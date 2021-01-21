@@ -94,7 +94,7 @@ public class AppViewer extends JFrame {
 
 
         //deleteButton
-        MyButton deleteWord = new MyButton("Delete word");
+        MyButton deleteWord = new MyButton("Delete word.");
         deleteWord.addActionListener(e -> {
             if (wordsList.getSelectedIndex() >= 0) {
                 appController.deleteOneWord(wordsList.getSelectedIndex());
