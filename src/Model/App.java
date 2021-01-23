@@ -1,9 +1,6 @@
 package Model;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -15,6 +12,29 @@ public class App {
     private static int numberOfRepeatOfASingleWord;
     private static int numberOfLearningWords;
     private ArrayList<WordCard> wordsList;
+    private ArrayList<WordCard> wordsListForLearning;
+    private WordCard oneRandomWordForLearn;
+    private ArrayList<WordCard> wordsForButtons;
+
+    public String getDictionaryFileNamePath() {
+        return dictionaryFileNamePath;
+    }
+
+    public void setDictionaryFileNamePath(String dictionaryFileNamePath) {
+        App.dictionaryFileNamePath = dictionaryFileNamePath;
+    }
+
+    public ArrayList<WordCard> getWordsForButtons() {
+        return wordsForButtons;
+    }
+
+    public WordCard getOneRandomWordForLearn() {
+        return oneRandomWordForLearn;
+    }
+
+    public ArrayList<WordCard> getWordsListForLearning() {
+        return wordsListForLearning;
+    }
 
     public ArrayList<WordCard> getWordsList() {
         return wordsList;
@@ -22,6 +42,16 @@ public class App {
 
     public boolean isThemeDark() {
         return themeDark;
+    }
+
+    public void setThemeDark(boolean themeDark) {
+        App.themeDark = themeDark;
+    }
+
+    public App() {
+        loadSettingFromFile();
+        readAllWordsFromFile();
+        numberOfRepeatOfASingleWord = 4;
     }
 
     /***
@@ -53,10 +83,18 @@ public class App {
         }
     }
 
-
-
-
-
+    public void saveSettingToFile(){
+        try (DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(settingFileNamePath))) {
+            dataOutputStream.writeUTF(dictionaryFileNamePath);//Path to dictionary file
+            dataOutputStream.writeBoolean(themeDark);//Boolean isThemeDark if true then theme will be dark
+            dataOutputStream.writeInt(numberOfRepeatOfASingleWord);//number how many times will be repeated learning word
+            dataOutputStream.writeInt(numberOfLearningWords);//number how many words in learning
+            dataOutputStream.flush();
+        } catch (IOException e) {
+            System.out.println("Error in MODEL saveSettingToFile(ArrayList<String> settings,String settingFilePath) " +
+                    "method");
+        }
+    }
 
 
     /**
@@ -78,10 +116,9 @@ public class App {
             System.out.println("Error in MODEL method readAllWordsFromFile()");
         }
         Collections.sort(tempArray);
+
         wordsList = tempArray;
     }
-
-
 
     /***
      * Ok1
@@ -122,13 +159,10 @@ public class App {
     /***
      *Saving one new word to file and ArrayList
      */
-    public boolean saveOneWord(String englishWord, String russianWord) {
-        if (!containedThisWord(new WordCard(englishWord, russianWord))) {
+    public void saveOneWord(String englishWord, String russianWord) {
             wordsList.add(new WordCard(englishWord, russianWord));
             Collections.sort(wordsList);
             saveDictionaryToFile();
-            return true;
-        }else return false;
     }
 
     /**
@@ -141,5 +175,131 @@ public class App {
         return wordsList.contains(wordCard);
     }
 
+
+    /**
+     ***************************************** LEARNING ************************************************
+     * */
+    /**
+     * Пытаемся получить список изучаемых слов из словаря
+     * Если ещё список слов не получен  и нет изучаемых слов
+     * то добираем новые слова из файла
+     */
+    public void createStudyingListFromAllWordsList() {
+
+        wordsListForLearning = new ArrayList<>();
+
+       /// int i = 0;
+
+
+//        if (wordsList.size() < numberOfLearningWords) {
+//            return list;
+//        }
+
+
+        //Getting all the words currently being studied
+        for (WordCard wordCard : wordsList) {
+
+
+            if (wordCard.isLearning()) {
+                wordsListForLearning.add(wordCard);
+            }
+        }
+
+        //Getting new word
+        if (wordsListForLearning.size() < numberOfLearningWords) {
+            WordCard wordCard;
+            while (wordsListForLearning.size() < numberOfLearningWords) {
+
+                wordCard = getRandomWordFromAllWordList();
+
+                if (!wordsListForLearning.contains(wordCard) && wordCard.getCount() < numberOfRepeatOfASingleWord) {
+                    wordCard.setLearning(true);
+                    wordsListForLearning.add(wordCard);
+                }
+              //  i++;
+               // if (i > wordsList.size()) break;
+            }
+        }
+    }
+
+
+    /**
+     * Получаем 10 случайных карточек в которые включена карточка с изучаемым словом для КНОПОК.
+     */
+    public void createRandomList(WordCard WordCardLearning) {
+
+        ArrayList<WordCard> list = new ArrayList<>();
+
+        int rand = (int) (Math.random() * 10);
+        int i = 0;
+
+        WordCard wordCard;
+        while (list.size() < 10) {
+            wordCard = getRandomWordFromAllWordList();
+            if (i == rand) {
+                list.add(WordCardLearning);
+                i++;
+            } else if (!list.contains(wordCard) && !wordCard.equals(WordCardLearning)) {
+                list.add(wordCard);
+                i++;
+            }
+        }
+        wordsForButtons = list;
+    }
+
+    /**
+     * Ok1
+     * Получаем случайную карточку из ОСНОВНОГО СЛОВАРЯ!!!!!!
+     */
+    public WordCard getRandomWordFromAllWordList() {
+        return wordsList.get((int) (Math.random() * wordsList.size()));
+    }
+
+    public void createOneRandomWordForLearn(){
+         oneRandomWordForLearn = wordsListForLearning.get((int) (Math.random() * wordsListForLearning.size()));
+    }
+
+
+    /**
+     * Ok1
+     * Сброс прогресса карточки на 0 при ошибке
+     */
+    public void resetOneWordProgress(WordCard wordCard) {
+        wordCard.setCount(-1);
+    }
+
+    /**
+     * Ok1
+     * New method for reset all progress
+     * write to file and reload ArrayList
+     */
+    public void resetAllProgress(){
+        try(WordOutputStream wordOutputStream =
+                    new WordOutputStream(new DataOutputStream(new FileOutputStream(dictionaryFileNamePath)))){
+            for (WordCard wordCard : wordsList){
+                wordOutputStream.writeWordCard(new WordCard(wordCard.getEnglishWord(), wordCard.getRussianWord()));
+            }
+            readAllWordsFromFile();
+        }catch (Exception e){
+            System.out.println("Error in resetAllProgress() method");
+        }
+    }
+
+
+    public void missed(WordCard oneRandomWordForLearn) {
+        createStudyingListFromAllWordsList();
+        createOneRandomWordForLearn();
+        createRandomList(getOneRandomWordForLearn());
+        oneRandomWordForLearn.setCount(oneRandomWordForLearn.getCount() + 1);
+        if (oneRandomWordForLearn.getCount() >= numberOfRepeatOfASingleWord) {
+            //setCount(oneRandomWordForLearn.getCount() + 1);//if not add +1 then word will be show more than need
+            oneRandomWordForLearn.setLearning(false);
+            createStudyingListFromAllWordsList();
+        }
+    }
+
+    public void loose(WordCard oneRandomWordForLearn){
+        oneRandomWordForLearn.setCount(-1);//After confirm will be zero.
+    }
 
 }

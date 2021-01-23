@@ -60,11 +60,11 @@ public class MainClass {
      *
      *
      */
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         mainClass = new MainClass();
         loadSettingFromFile(settingFilePath);
         mainClass.run();
-    }
+    }*/
 
     /**
      * New method for loadSetting from file

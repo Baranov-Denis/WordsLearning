@@ -10,15 +10,9 @@ public class SwingSettingsMode {
 
     private final JFrame frame;
     private final JPanel panel;
-    private final MyButton buttonReset, buttonBack, buttonSelectDictionary, buttonChangeCountWordRepeats;
+    private final MyButton buttonSelectDictionary;
     private JLabel statistic;
     private final JTextField fieldChangeCountWordRepeats/*, fieldCurrentDirectory*/;
-    private final ButtonGroup buttonGroup;
-    private final JRadioButton dark, light;
-
-
-
-
 
 
     public SwingSettingsMode() {
@@ -29,7 +23,7 @@ public class SwingSettingsMode {
         panel.removeAll();
         panel.setBackground(MyColors.BACKGROUND);
 
-        buttonReset = new MyButton("Reset learned progress");
+        MyButton buttonReset = new MyButton("Reset learned progress");
         buttonReset.addActionListener(e -> {
 
             int inp = JOptionPane.showConfirmDialog(panel, "All progress will be reset!!!");
@@ -46,7 +40,7 @@ public class SwingSettingsMode {
         statistic.setBackground(MyColors.BUTTON_COLOR);
 
 
-        buttonBack = new MyButton("<---Back");
+        MyButton buttonBack = new MyButton("<---Back");
         buttonBack.addActionListener(e -> {
             saveCountRepeat();
             new SwingMainPage();
@@ -54,13 +48,13 @@ public class SwingSettingsMode {
         );
 
 
-        buttonGroup = new ButtonGroup();
-        dark = new JRadioButton("Dark");
+        ButtonGroup buttonGroup = new ButtonGroup();
+        JRadioButton dark = new JRadioButton("Dark");
         dark.setBackground(MyColors.BUTTON_COLOR);
         dark.setForeground(MyColors.FONT);
         dark.setPreferredSize(new Dimension(157, 41));
 
-        light = new JRadioButton("Light");
+        JRadioButton light = new JRadioButton("Light");
         light.setBackground(MyColors.BUTTON_COLOR);
         light.setForeground(MyColors.FONT);
         light.setPreferredSize(new Dimension(158, 41));
@@ -91,7 +85,7 @@ public class SwingSettingsMode {
             SwingUtilities.updateComponentTreeUI(frame);
         });
 
-        buttonChangeCountWordRepeats = new MyButton("Press for save word repeat ");
+        MyButton buttonChangeCountWordRepeats = new MyButton("Press for save word repeat ");
         buttonChangeCountWordRepeats.setPreferredSize(new Dimension(233, 41));
         fieldChangeCountWordRepeats = new JTextField(3);
         fieldChangeCountWordRepeats.setFont(new Font("sans-serif", Font.BOLD, 28));
