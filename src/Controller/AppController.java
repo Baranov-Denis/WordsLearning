@@ -2,20 +2,34 @@ package Controller;
 
 import Model.App;
 import Model.WordCard;
-import Viewer.AppViewer;
+import Viewer.Viewer;
+
+import java.util.ArrayList;
 
 public class AppController {
     private final App app;
     private String message = "";
-    private AppViewer appViewer;
+    private ArrayList<Viewer> viewers;
 
 
     public AppController(App app) {
         this.app = app;
+        viewers = new ArrayList<>();
     }
 
-    public void addViewer(AppViewer appViewer) {
-        this.appViewer = appViewer;
+    public void addViewer(Viewer viewer) {
+        viewers.add(viewer);
+    }
+
+    private Viewer run(String name) {
+        Viewer targetViewer = null;
+        for (Viewer viewer : viewers) {
+            if (viewer.getName().equals(name)) {
+                targetViewer = viewer;
+                break;
+            }
+        }
+        return targetViewer;
     }
 
     /**
@@ -23,9 +37,25 @@ public class AppController {
      * false - light
      */
     public void loadTheme() {
-        appViewer.setThemeDark(app.isThemeDark());
+        for (Viewer viewer : viewers) viewer.setThemeDark(app.isThemeDark());
     }
 
+
+    /***
+     * ---------------------------------Run Main Page--------------------------------------------
+     */
+    public void runMainPage() {
+        run("MainPage").runView();
+    }
+
+
+    /**
+     * ---------------------------------Run Editor Page-------------------------------------------
+     */
+    public void runEditorPage() {
+        run("EditorPage").runView(app.getWordsList(), message, app.getWordsList().size());
+        message = "";
+    }
 
     /**
      * deleteOne word
@@ -35,7 +65,8 @@ public class AppController {
             app.deleteOneWord(app.getWordsList().get(index));
             message = "Word Deleted.";
         }
-        appViewer.runEditorPage(app.getWordsList(), message, app.getWordsList().size());
+
+        run("EditorPage").runView(app.getWordsList(), message, app.getWordsList().size());
         message = "";
     }
 
@@ -51,57 +82,52 @@ public class AppController {
         } else {
             message = "Error word did not saved.";
         }
-        appViewer.runEditorPage(app.getWordsList(), message, app.getWordsList().size());
+        run("EditorPage").runView(app.getWordsList(), message, app.getWordsList().size());
         message = "";
     }
 
 
-    public void runMainPage() {
-        appViewer.runMainPage();
-    }
+    /**
+     * ------------------------------Run Learning Page-------------------------------------------
+     */
 
-    public void runEditorPage() {
-        appViewer.runEditorPage(app.getWordsList(), message, app.getWordsList().size());
-        message = "";
-    }
 
     public void runLearningPage() {
-        app.createStudyingListFromAllWordsList();
-        app.createOneRandomWordForLearn();
-        app.createRandomList(app.getOneRandomWordForLearn());
-        appViewer.runLearningPage(app.getOneRandomWordForLearn(), app.getWordsForButtons(),
-                true);
+        app.runLearn();
+        run("LearningPage").runView(app.getOneRandomWordForLearn(), app.getWordsForButtons(), true);
     }
 
     public void buttonsAction(String word) {
 
         if (word.equals(app.getOneRandomWordForLearn().getRussianWord())) {
-            app.missed(app.getOneRandomWordForLearn());
-            appViewer.runLearningPage(app.getOneRandomWordForLearn(),
-                    app.getWordsForButtons(), true);
-            for(WordCard f : app.getWordsListForLearning()) System.out.println(f.getRussianWord());
+            app.hit(app.getOneRandomWordForLearn());
+            run("LearningPage").runView(app.getOneRandomWordForLearn(),app.getWordsForButtons(), true);
         } else {
             app.loose(app.getOneRandomWordForLearn());
-            appViewer.runLearningPage(app.getOneRandomWordForLearn(),
-                    app.getWordsForButtons(), false);
+            run("LearningPage").runView(app.getOneRandomWordForLearn(),app.getWordsForButtons(), false);
         }
         app.saveDictionaryToFile();
     }
 
+
+    /**
+     * ------------------------------Run Setting Page-------------------------------------------
+     */
     public void runSettingPage() {
-        appViewer.runSettingPage(app.getDictionaryFileNamePath());
+        run("SettingPage").runView(app.getDictionaryFileNamePath());
     }
 
     public void resetAllProgress() {
         app.resetAllProgress();
-        appViewer.runSettingPage(app.getDictionaryFileNamePath());
+        run("SettingPage").runView(app.getDictionaryFileNamePath());
     }
 
     public void changeTheme(boolean theme) {
+
         app.setThemeDark(theme);
         app.saveSettingToFile();
-        appViewer.setThemeDark(app.isThemeDark());
-        appViewer.runSettingPage(app.getDictionaryFileNamePath());
+        run("SettingPage").setThemeDark(app.isThemeDark());
+        run("SettingPage").runView(app.getDictionaryFileNamePath());
     }
 
 
@@ -109,6 +135,6 @@ public class AppController {
         app.setDictionaryFileNamePath(fileName);
         app.saveSettingToFile();
         app.readAllWordsFromFile();
-        appViewer.runSettingPage(app.getDictionaryFileNamePath());
+        run("SettingPage").runView(app.getDictionaryFileNamePath());
     }
 }

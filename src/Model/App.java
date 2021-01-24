@@ -54,6 +54,10 @@ public class App {
         numberOfRepeatOfASingleWord = 4;
     }
 
+    /**
+     ********************************************************** START *********************************************
+     */
+
     /***
      *
      *loading setting from file
@@ -177,8 +181,8 @@ public class App {
 
 
     /**
-     ***************************************** LEARNING ************************************************
-     * */
+     *********************************************************** LEARNING ******************************************
+     *
     /**
      * Пытаемся получить список изучаемых слов из словаря
      * Если ещё список слов не получен  и нет изучаемых слов
@@ -222,6 +226,12 @@ public class App {
         }
     }
 
+
+    public void runLearn(){
+        createStudyingListFromAllWordsList();
+        createOneRandomWordForLearn();
+        createRandomList(getOneRandomWordForLearn());
+    }
 
     /**
      * Получаем 10 случайных карточек в которые включена карточка с изучаемым словом для КНОПОК.
@@ -286,13 +296,12 @@ public class App {
     }
 
 
-    public void missed(WordCard oneRandomWordForLearn) {
+    public void hit(WordCard oneRandomWordForLearn) {
         createStudyingListFromAllWordsList();
         createOneRandomWordForLearn();
         createRandomList(getOneRandomWordForLearn());
         oneRandomWordForLearn.setCount(oneRandomWordForLearn.getCount() + 1);
         if (oneRandomWordForLearn.getCount() >= numberOfRepeatOfASingleWord) {
-            //setCount(oneRandomWordForLearn.getCount() + 1);//if not add +1 then word will be show more than need
             oneRandomWordForLearn.setLearning(false);
             createStudyingListFromAllWordsList();
         }
