@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 
 public abstract class Viewer {
-    String  name = "j";
+    String  name = "";
 
     public String getName() {
         return name;
@@ -21,17 +21,15 @@ public abstract class Viewer {
 
     public Viewer(AppController appController) {
         this.appController = appController;
-
     }
 
     public void setThemeDark(boolean themeDark) {
         this.themeDark = themeDark;
         MyColors.changeTheme(themeDark);
-        //System.out.println(themeDark);
     }
 
 
-    public abstract void runView(ArrayList<WordCard> wordsList, String message, int size);
+    //public abstract void runView(ArrayList<WordCard> wordsList, String message, int size);
     public abstract void runView();
 
     public abstract void runView(String dictionaryFileNamePath);

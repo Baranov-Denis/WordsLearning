@@ -11,19 +11,33 @@ import java.util.ArrayList;
 
 public class EditorPage extends Viewer {
 
+    private ArrayList<WordCard> wordsList;
+    private String message;
+    private int wordsCountNumber;
+
+    public void setWordsList(ArrayList<WordCard> wordsList) {
+        this.wordsList = wordsList;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setWordsCountNumber(int wordsCountNumber) {
+        this.wordsCountNumber = wordsCountNumber;
+    }
+
     public EditorPage(AppController appController) {
         super(appController);
         name = "EditorPage";
+        wordsList = new ArrayList<>();
     }
 
 
-    public void runView(ArrayList<WordCard> wordsList, String message, int wordsCountNumber) {
-        //System.out.println(themeDark);
+
+    public void runView() {
         panel.removeAll();
         appController.loadTheme();
-
-       // MyColors.changeTheme(super.themeDark);
-      //
 
         //words list window
         DefaultListModel<String> listModel = new DefaultListModel<>();
@@ -56,9 +70,11 @@ public class EditorPage extends Viewer {
         //deleteButton
         MyButton deleteWord = new MyButton("Delete word.");
         deleteWord.addActionListener(e -> {
-            int inp = JOptionPane.showConfirmDialog(panel,"Do yo really want delete this word?");
-            if(inp == 0) {
-                appController.deleteOneWord(wordsJList.getSelectedIndex());
+            if(wordsJList.getSelectedIndex() >= 0) {
+                int inp = JOptionPane.showConfirmDialog(panel, "Do yo really want delete this word?");
+                if (inp == 0) {
+                    appController.deleteOneWord(wordsJList.getSelectedIndex());
+                }
             }
         });
 
@@ -113,9 +129,7 @@ public class EditorPage extends Viewer {
         SwingUtilities.updateComponentTreeUI(frame);
     }
 
-    @Override
-    public void runView() {
-    }
+
 
     @Override
     public void runView(String dictionaryFileNamePath) {

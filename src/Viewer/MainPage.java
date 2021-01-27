@@ -17,10 +17,6 @@ public class MainPage extends Viewer {
     }
 
 
-    @Override
-    public void runView(ArrayList<WordCard> wordsList, String message, int size) {
-
-    }
 
 
     public void runView() {

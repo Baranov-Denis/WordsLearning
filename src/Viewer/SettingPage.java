@@ -95,9 +95,7 @@ public class SettingPage extends Viewer{
 
     }
 
-    @Override
-    public void runView(ArrayList<WordCard> wordsList, String message, int size) {
-    }
+
 
     @Override
     public void runView() {

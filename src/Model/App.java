@@ -58,6 +58,11 @@ public class App {
      ********************************************************** START *********************************************
      */
 
+    /**
+     *
+     * ****************************************************** LOAD SETTINGS ***************************************
+     */
+
     /***
      *
      *loading setting from file
@@ -100,6 +105,9 @@ public class App {
         }
     }
 
+    /**
+     * ********************************************************** READS DICTIONARY FROM FILE **************************************
+     */
 
     /**
      * Reading words from file into ArrayList wordList
@@ -125,10 +133,11 @@ public class App {
     }
 
     /***
+     * ********************************************** WRITING DICTIONARY TO FILE ******************************************
      * Ok1
      * New method for saving Dictionary array to File
      */
-    public void saveDictionaryToFile() {
+    public void writeDictionaryToFile() {
         try(WordOutputStream wordOutputStream =
                     new WordOutputStream(new DataOutputStream(new FileOutputStream(dictionaryFileNamePath)))){
             for (WordCard wordCard : wordsList){
@@ -140,14 +149,28 @@ public class App {
     }
 
 
+
+
+
+
+    /**
+     *
+     * *************************************** DICTIONARY EDITOR *******************************************************
+     */
+
+
     /**
      * Ok1
      * This method gets One word and deleting it from Array List.And then rewrites this Array to file. Then reloads
      * this array in app.
      *
-     * @param wordCard - word which needs to delete.
+     * @param index - number of wordCard in ArrayList
      */
-    public void deleteOneWord(WordCard wordCard) {
+    public void deleteOneWord(int index) {
+        WordCard wordCard = null;
+        if (index >= 0) {
+            wordCard = getWordsList().get(index);
+        }
         try (WordOutputStream wordOutputStream =
                      new WordOutputStream(new DataOutputStream(new FileOutputStream(dictionaryFileNamePath)))) {
             wordsList.remove(wordCard);//deleting word from allWordsList Array.
@@ -163,10 +186,13 @@ public class App {
     /***
      *Saving one new word to file and ArrayList
      */
-    public void saveOneWord(String englishWord, String russianWord) {
+    public boolean saveOneWord(String englishWord, String russianWord) {
+        if ((!containedThisWord(new WordCard(englishWord, russianWord))) && (!englishWord.equals("")) && (!russianWord.equals(""))) {
             wordsList.add(new WordCard(englishWord, russianWord));
             Collections.sort(wordsList);
-            saveDictionaryToFile();
+            writeDictionaryToFile();
+            return true;
+        }else return false;
     }
 
     /**
@@ -180,6 +206,9 @@ public class App {
     }
 
 
+
+
+
     /**
      *********************************************************** LEARNING ******************************************
      *
@@ -191,13 +220,6 @@ public class App {
     public void createStudyingListFromAllWordsList() {
 
         wordsListForLearning = new ArrayList<>();
-
-       /// int i = 0;
-
-
-//        if (wordsList.size() < numberOfLearningWords) {
-//            return list;
-//        }
 
 
         //Getting all the words currently being studied
@@ -220,8 +242,7 @@ public class App {
                     wordCard.setLearning(true);
                     wordsListForLearning.add(wordCard);
                 }
-              //  i++;
-               // if (i > wordsList.size()) break;
+
             }
         }
     }
@@ -270,13 +291,7 @@ public class App {
     }
 
 
-    /**
-     * Ok1
-     * Сброс прогресса карточки на 0 при ошибке
-     */
-    public void resetOneWordProgress(WordCard wordCard) {
-        wordCard.setCount(-1);
-    }
+
 
     /**
      * Ok1
