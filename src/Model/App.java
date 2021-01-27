@@ -64,7 +64,7 @@ public class App {
     public App() {
         loadSettingFromFile();
         readAllWordsFromFile();
-        numberOfRepeatOfASingleWord = 4;
+
     }
 
     /**
@@ -85,7 +85,7 @@ public class App {
      * 3: number repeating one word to end
      * 4: how many words learning
      */
-    public void loadSettingFromFile() {
+    private void loadSettingFromFile() {
         try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(settingFileNamePath))) {
             dictionaryFileNamePath = dataInputStream.readUTF();
             themeDark = dataInputStream.readBoolean();
@@ -147,7 +147,7 @@ public class App {
      * Ok1
      * New method for saving Dictionary array to File
      */
-    public void writeDictionaryToFile() {
+    private void writeDictionaryToFile() {
         try(WordOutputStream wordOutputStream =
                     new WordOutputStream(new DataOutputStream(new FileOutputStream(dictionaryFileNamePath)))){
             for (WordCard wordCard : wordsList){
@@ -208,7 +208,7 @@ public class App {
      * @param wordCard testing word Card
      * @return boolean
      */
-    public boolean containedThisWord(WordCard wordCard) {
+    private boolean containedThisWord(WordCard wordCard) {
         return wordsList.contains(wordCard);
     }
 
@@ -224,7 +224,7 @@ public class App {
      * Если ещё список слов не получен  и нет изучаемых слов
      * то добираем новые слова из файла
      */
-    public void createStudyingListFromAllWordsList() {
+    private void createStudyingListFromAllWordsList() {
 
         wordsListForLearning = new ArrayList<>();
 
@@ -276,7 +276,7 @@ public class App {
     /**
      * Получаем 10 случайных карточек в которые включена карточка с изучаемым словом для КНОПОК.
      */
-    public void createRandomList(WordCard WordCardLearning) {
+    private void createRandomList(WordCard WordCardLearning) {
 
         ArrayList<WordCard> list = new ArrayList<>();
 
@@ -301,11 +301,11 @@ public class App {
      * Ok1
      * Получаем случайную карточку из ОСНОВНОГО СЛОВАРЯ!!!!!!
      */
-    public WordCard getRandomWordFromAllWordList() {
+    private WordCard getRandomWordFromAllWordList() {
         return wordsList.get((int) (Math.random() * wordsList.size()));
     }
 
-    public void createOneRandomWordForLearn(){
+    private void createOneRandomWordForLearn(){
          oneRandomWordForLearn = wordsListForLearning.get((int) (Math.random() * wordsListForLearning.size()));
     }
 
