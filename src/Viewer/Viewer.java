@@ -1,10 +1,8 @@
 package Viewer;
 
 import Controller.AppController;
-import Model.WordCard;
 
 import javax.swing.*;
-import java.util.ArrayList;
 
 
 public abstract class Viewer {
@@ -32,7 +30,7 @@ public abstract class Viewer {
 
     public abstract void runView();
 
-    public abstract void runView(String dictionaryFileNamePath);
+
 
 
 }

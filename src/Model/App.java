@@ -16,6 +16,22 @@ public class App {
     private WordCard oneRandomWordForLearn;
     private ArrayList<WordCard> wordsForButtons;
 
+    public int getNumberOfLearningWords() {
+        return numberOfLearningWords;
+    }
+
+    public void setNumberOfLearningWords(int numberOfLearningWords) {
+        App.numberOfLearningWords = numberOfLearningWords;
+    }
+
+    public int getNumberOfRepeatOfASingleWord() {
+        return numberOfRepeatOfASingleWord;
+    }
+
+    public void setNumberOfRepeatOfASingleWord(int numberOfRepeatOfASingleWord) {
+        App.numberOfRepeatOfASingleWord = numberOfRepeatOfASingleWord;
+    }
+
     public String getDictionaryFileNamePath() {
         return dictionaryFileNamePath;
     }
@@ -32,9 +48,6 @@ public class App {
         return oneRandomWordForLearn;
     }
 
-    public ArrayList<WordCard> getWordsListForLearning() {
-        return wordsListForLearning;
-    }
 
     public ArrayList<WordCard> getWordsList() {
         return wordsList;
@@ -56,14 +69,13 @@ public class App {
 
     /**
      ********************************************************** START *********************************************
-     */
-
-    /**
+     *
+     *
+     *
      *
      * ****************************************************** LOAD SETTINGS ***************************************
-     */
-
-    /***
+     *
+     *
      *
      *loading setting from file
      * Reading file from path with name settingFileNamePath
@@ -107,9 +119,7 @@ public class App {
 
     /**
      * ********************************************************** READS DICTIONARY FROM FILE **************************************
-     */
-
-    /**
+     *
      * Reading words from file into ArrayList wordList
      */
     public void readAllWordsFromFile() {
@@ -154,12 +164,9 @@ public class App {
 
 
     /**
-     *
      * *************************************** DICTIONARY EDITOR *******************************************************
-     */
-
-
-    /**
+     *
+     *
      * Ok1
      * This method gets One word and deleting it from Array List.And then rewrites this Array to file. Then reloads
      * this array in app.

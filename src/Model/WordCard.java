@@ -17,12 +17,7 @@ public class WordCard implements Comparable<WordCard>{
        // this.isLearned = false;
     }
 
-    public WordCard(String englishWord, String russianWord, int count) {
-        this.englishWord = englishWord;
-        this.russianWord = russianWord;
-        this.count = count;
-     //   this.isLearning =isLearning;
-    }
+
 
     public WordCard(String englishWord, String russianWord, int count, boolean isLearning) {
         this.englishWord = englishWord;
@@ -47,13 +42,6 @@ public class WordCard implements Comparable<WordCard>{
 
 
 
- //   public String getIsLearning() {
-  //      return isLearning;
-  //  }
-
-  //  public void setIsLearning(String isLearning) {
-   //     this.isLearning = isLearning;
-  //  }
 
     public String getEnglishWord() {
         return englishWord;

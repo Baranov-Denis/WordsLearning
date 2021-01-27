@@ -23,7 +23,6 @@ public class StartApp {
         Viewer settingPage = new SettingPage(appController);
         Viewer learningPage = new LearningPage(appController);
 
-        //appController.addViewer(viewer, editorPage, settingPage);
         appController.addViewer(viewer);
         appController.addViewer(editorPage);
         appController.addViewer(settingPage);

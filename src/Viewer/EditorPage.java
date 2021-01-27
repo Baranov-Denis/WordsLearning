@@ -6,7 +6,6 @@ import Model.WordCard;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
-import java.io.File;
 import java.util.ArrayList;
 
 public class EditorPage extends Viewer {
@@ -37,7 +36,7 @@ public class EditorPage extends Viewer {
 
     public void runView() {
         panel.removeAll();
-        appController.loadTheme();
+       //themeDark = appController.loadTheme();
 
         //words list window
         DefaultListModel<String> listModel = new DefaultListModel<>();
@@ -67,7 +66,7 @@ public class EditorPage extends Viewer {
                 "300\"><font size = 5>" + message + "</font></div></html>");
 
 
-        //deleteButton
+        //DELETE Button
         MyButton deleteWord = new MyButton("Delete word.");
         deleteWord.addActionListener(e -> {
             if(wordsJList.getSelectedIndex() >= 0) {
@@ -75,6 +74,8 @@ public class EditorPage extends Viewer {
                 if (inp == 0) {
                     appController.deleteOneWord(wordsJList.getSelectedIndex());
                 }
+            }else {
+                appController.runEditorPage();
             }
         });
 
@@ -131,10 +132,7 @@ public class EditorPage extends Viewer {
 
 
 
-    @Override
-    public void runView(String dictionaryFileNamePath) {
 
-    }
 
 
 

@@ -33,7 +33,6 @@ public class LearningPage extends Viewer {
 
     public void runView(){
         panel.removeAll();
-        MyColors.changeTheme(themeDark);
 
         JLabel learningWordLabel = new JLabel(learningWord.getEnglishWord(), SwingConstants.CENTER);
         learningWordLabel.setPreferredSize(new Dimension(285, 50));
@@ -80,8 +79,5 @@ public class LearningPage extends Viewer {
 
 
 
-    @Override
-    public void runView(String dictionaryFileNamePath) {
 
-    }
 }

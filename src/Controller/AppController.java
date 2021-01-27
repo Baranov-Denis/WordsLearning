@@ -3,24 +3,21 @@ package Controller;
 import Model.App;
 import Viewer.*;
 
-import java.util.ArrayList;
-
 public class AppController {
     private final App app;
     private MainPage mainPage;
     private EditorPage editorPage;
     private LearningPage learningPage;
     private SettingPage settingPage;
-    private ArrayList<Viewer> viewers;
 
 
     public AppController(App app) {
         this.app = app;
-        viewers = new ArrayList<>();
+
     }
 
     public void addViewer(Viewer viewer) {
-        viewers.add(viewer);
+
         switch (viewer.getName()) {
             case "MainPage":
                 mainPage = (MainPage) viewer;
@@ -37,23 +34,14 @@ public class AppController {
         }
     }
 
-    private Viewer run(String name) {
-        Viewer targetViewer = null;
-        for (Viewer viewer : viewers) {
-            if (viewer.getName().equals(name)) {
-                targetViewer = viewer;
-                break;
-            }
-        }
-        return targetViewer;
-    }
 
     /**
      * true - dark
      * false - light
      */
-    public void loadTheme() {
-        for (Viewer viewer : viewers) viewer.setThemeDark(app.isThemeDark());
+    public boolean loadTheme() {
+        MyColors.changeTheme(app.isThemeDark());
+        return app.isThemeDark();
     }
 
 
@@ -118,8 +106,6 @@ public class AppController {
     }
 
     public void buttonsAction(String word) {
-
-
         if (app.checkingWord(word)) {
             learningPage.setLearningWord(app.getOneRandomWordForLearn());
             learningPage.setWords(app.getWordsForButtons());
@@ -135,23 +121,25 @@ public class AppController {
 
 
     /**
-     ******************************************************* RUN SETTING PAGE ****************************************
+     * ****************************************************** RUN SETTING PAGE ****************************************
      */
     public void runSettingPage() {
-        run("SettingPage").runView(app.getDictionaryFileNamePath());
+        settingPage.setIntNumOfRepeatOfASingleWord(app.getNumberOfRepeatOfASingleWord());
+        settingPage.setDictionaryPath(app.getDictionaryFileNamePath());
+        settingPage.setIntNumOfWords(app.getNumberOfLearningWords());
+        settingPage.runView();
     }
 
     public void resetAllProgress() {
         app.resetAllProgress();
-        run("SettingPage").runView(app.getDictionaryFileNamePath());
+        settingPage.runView();
     }
 
     public void changeTheme(boolean theme) {
-
         app.setThemeDark(theme);
         app.saveSettingToFile();
-        run("SettingPage").setThemeDark(app.isThemeDark());
-        run("SettingPage").runView(app.getDictionaryFileNamePath());
+        settingPage.setThemeDark(app.isThemeDark());
+        settingPage.runView();
     }
 
 
@@ -159,6 +147,14 @@ public class AppController {
         app.setDictionaryFileNamePath(fileName);
         app.saveSettingToFile();
         app.readAllWordsFromFile();
-        run("SettingPage").runView(app.getDictionaryFileNamePath());
+        settingPage.setDictionaryPath(app.getDictionaryFileNamePath());
+        settingPage.runView();
+    }
+
+    public void saveAndExit(int numOfRepeat, int numOfWords) {
+        app.setNumberOfLearningWords(numOfWords);
+        app.setNumberOfRepeatOfASingleWord(numOfRepeat);
+        app.saveSettingToFile();
+        mainPage.runView();
     }
 }
