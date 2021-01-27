@@ -61,10 +61,7 @@ public class MainPage extends Viewer {
 
     }
 
-    @Override
-    public void runView(WordCard oneRandomWordForLearn, ArrayList<WordCard> wordsForButtons, boolean b) {
 
-    }
 
 
 //    /**

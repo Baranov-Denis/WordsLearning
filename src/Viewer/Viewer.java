@@ -29,10 +29,10 @@ public abstract class Viewer {
     }
 
 
-    //public abstract void runView(ArrayList<WordCard> wordsList, String message, int size);
+
     public abstract void runView();
 
     public abstract void runView(String dictionaryFileNamePath);
 
-    public abstract void runView(WordCard oneRandomWordForLearn, ArrayList<WordCard> wordsForButtons, boolean b);
+
 }

@@ -8,12 +8,30 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class LearningPage extends Viewer {
+
+    private WordCard learningWord;
+    private ArrayList<WordCard> words;
+    private boolean hit;
+
+    public void setLearningWord(WordCard learningWord) {
+        this.learningWord = learningWord;
+    }
+
+    public void setWords(ArrayList<WordCard> words) {
+        this.words = words;
+    }
+
+    public void setHit(boolean hit) {
+        this.hit = hit;
+    }
+
     public LearningPage(AppController appController) {
         super(appController);
         name = "LearningPage";
     }
 
-    public void runView(WordCard learningWord, ArrayList<WordCard> words, boolean miss){
+
+    public void runView(){
         panel.removeAll();
         MyColors.changeTheme(themeDark);
 
@@ -24,7 +42,7 @@ public class LearningPage extends Viewer {
 
 
 
-        if(miss) {
+        if(hit) {
             for (int i = 0; i < 10; i++) {
                 MyButton button = new MyButton(words.get(i).getRussianWord());
                 if (learningWord.getCount() == 0 && button.getText().equals(learningWord.getRussianWord())) {
@@ -60,10 +78,7 @@ public class LearningPage extends Viewer {
 
 
 
-    @Override
-    public void runView() {
 
-    }
 
     @Override
     public void runView(String dictionaryFileNamePath) {

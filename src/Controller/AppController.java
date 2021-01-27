@@ -1,7 +1,6 @@
 package Controller;
 
 import Model.App;
-import Model.WordCard;
 import Viewer.*;
 
 import java.util.ArrayList;
@@ -67,7 +66,7 @@ public class AppController {
 
 
     /**
-     ****************************************** RUN EDITOR PAGE *************************************
+     * ***************************************** RUN EDITOR PAGE *************************************
      */
     public void runEditorPage() {
         editorPage.setWordsList(app.getWordsList());
@@ -96,7 +95,7 @@ public class AppController {
         if (app.saveOneWord(englishWord, russianWord)) {
             editorPage.setMessage("Word saved.");
         } else {
-           editorPage.setMessage("Error word did not saved.");
+            editorPage.setMessage("Error word did not saved.");
         }
         editorPage.setWordsList(app.getWordsList());
         editorPage.setWordsCountNumber(app.getWordsList().size());
@@ -111,24 +110,32 @@ public class AppController {
 
     public void runLearningPage() {
         app.runLearn();
-        run("LearningPage").runView(app.getOneRandomWordForLearn(), app.getWordsForButtons(), true);
+        learningPage.setLearningWord(app.getOneRandomWordForLearn());
+        learningPage.setWords(app.getWordsForButtons());
+        learningPage.setHit(true);
+        learningPage.runView();
+
     }
 
     public void buttonsAction(String word) {
 
-        if (word.equals(app.getOneRandomWordForLearn().getRussianWord())) {
-            app.hit(app.getOneRandomWordForLearn());
-            run("LearningPage").runView(app.getOneRandomWordForLearn(), app.getWordsForButtons(), true);
+
+        if (app.checkingWord(word)) {
+            learningPage.setLearningWord(app.getOneRandomWordForLearn());
+            learningPage.setWords(app.getWordsForButtons());
+            learningPage.setHit(true);
+            learningPage.runView();
         } else {
-            app.loose(app.getOneRandomWordForLearn());
-            run("LearningPage").runView(app.getOneRandomWordForLearn(), app.getWordsForButtons(), false);
+            learningPage.setLearningWord(app.getOneRandomWordForLearn());
+            learningPage.setWords(app.getWordsForButtons());
+            learningPage.setHit(false);
+            learningPage.runView();
         }
-        app.writeDictionaryToFile();
     }
 
 
     /**
-     * ------------------------------Run Setting Page-------------------------------------------
+     ******************************************************* RUN SETTING PAGE ****************************************
      */
     public void runSettingPage() {
         run("SettingPage").runView(app.getDictionaryFileNamePath());

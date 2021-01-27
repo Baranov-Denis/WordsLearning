@@ -136,9 +136,6 @@ public class EditorPage extends Viewer {
 
     }
 
-    @Override
-    public void runView(WordCard oneRandomWordForLearn, ArrayList<WordCard> wordsForButtons, boolean b) {
 
-    }
 
 }

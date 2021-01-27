@@ -221,7 +221,6 @@ public class App {
 
         wordsListForLearning = new ArrayList<>();
 
-
         //Getting all the words currently being studied
         for (WordCard wordCard : wordsList) {
 
@@ -244,6 +243,19 @@ public class App {
                 }
 
             }
+        }
+    }
+
+
+    public boolean checkingWord(String answer){
+        if (answer.equals(getOneRandomWordForLearn().getRussianWord())) {
+            hit(getOneRandomWordForLearn());
+            writeDictionaryToFile();
+            return true;
+        } else {
+            loose(getOneRandomWordForLearn());
+            writeDictionaryToFile();
+            return false;
         }
     }
 
